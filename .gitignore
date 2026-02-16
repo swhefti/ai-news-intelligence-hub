@@ -1,0 +1,8 @@
+.env
+.claude/
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+ingestion/data/
+ingestion/test_data/
