@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS articles (
     source_priority TEXT NOT NULL,
     authors JSONB DEFAULT '[]',
     tags JSONB DEFAULT '[]',
+    keywords TEXT[] DEFAULT '{}',
     fetched_at TIMESTAMPTZ DEFAULT NOW(),
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -71,6 +72,7 @@ CREATE INDEX IF NOT EXISTS chunks_published_idx ON chunks(published_at DESC);
 -- Index for articles
 CREATE INDEX IF NOT EXISTS articles_source_idx ON articles(source_name);
 CREATE INDEX IF NOT EXISTS articles_published_idx ON articles(published_at DESC);
+CREATE INDEX IF NOT EXISTS articles_keywords_idx ON articles USING GIN (keywords);
 
 -- Function for similarity search
 CREATE OR REPLACE FUNCTION match_chunks(
@@ -198,6 +200,7 @@ class SupabaseStorage:
             "source_priority": article.source_priority,
             "authors": json.dumps(article.authors),
             "tags": json.dumps(article.tags),
+            "keywords": getattr(article, "keywords", []) or [],
             "fetched_at": article.fetched_at.isoformat(),
         }
         

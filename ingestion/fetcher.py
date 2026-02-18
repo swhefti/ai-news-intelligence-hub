@@ -43,8 +43,9 @@ class Article:
     source_priority: str
     authors: list[str] = field(default_factory=list)
     tags: list[str] = field(default_factory=list)
+    keywords: list[str] = field(default_factory=list)
     fetched_at: datetime = field(default_factory=datetime.utcnow)
-    
+
     def to_dict(self) -> dict:
         """Convert to dictionary for storage."""
         return {
@@ -59,6 +60,7 @@ class Article:
             "source_priority": self.source_priority,
             "authors": self.authors,
             "tags": self.tags,
+            "keywords": self.keywords,
             "fetched_at": self.fetched_at.isoformat(),
         }
 
