@@ -39,3 +39,79 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Briefing editorial styles */
+.briefing-content {
+  font-family: var(--font-merriweather), Georgia, "Times New Roman", serif;
+  color: #1a1a1a;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+@media (prefers-color-scheme: dark) {
+  .briefing-content {
+    color: #e0e0e0;
+  }
+}
+
+.briefing-content h2 {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.briefing-content h2:first-child {
+  margin-top: 0;
+}
+
+.briefing-content h3 {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
+}
+
+.briefing-content p {
+  margin-bottom: 0.75rem;
+}
+
+.briefing-content p:last-child {
+  margin-bottom: 0;
+}
+
+.briefing-content ul,
+.briefing-content ol {
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+}
+
+.briefing-content ul {
+  list-style-type: disc;
+}
+
+.briefing-content ol {
+  list-style-type: decimal;
+}
+
+.briefing-content li {
+  margin-bottom: 0.35rem;
+}
+
+.briefing-content strong {
+  font-weight: 700;
+}
+
+.briefing-content a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.briefing-content a:hover {
+  opacity: 0.8;
+}

@@ -2,6 +2,8 @@
 
 import { useState, useEffect, FormEvent } from "react";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
@@ -433,11 +435,17 @@ function BriefingTab() {
           </div>
 
           {/* Briefing content */}
-          <div className="whitespace-pre-wrap leading-relaxed">
-            {result.briefing}
+          <div className="border-l-4 border-accent/20 pl-6 py-2">
+            <div className="briefing-content">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {result.briefing}
+              </ReactMarkdown>
+            </div>
           </div>
 
-          <SourceList sources={result.sources} />
+          <div className="font-sans">
+            <SourceList sources={result.sources} />
+          </div>
         </div>
       )}
     </>
