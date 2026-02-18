@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, FormEvent } from "react";
+import Link from "next/link";
 
 interface Source {
   title: string;
@@ -68,12 +69,20 @@ export default function Home() {
               Ask questions about the latest AI news
             </p>
           </div>
-          {articleCount !== null && (
-            <div className="text-right">
-              <span className="text-2xl font-bold text-accent">{articleCount}</span>
-              <p className="text-xs text-muted-foreground">articles indexed</p>
-            </div>
-          )}
+          <div className="flex items-center gap-4">
+            {articleCount !== null && (
+              <div className="text-right">
+                <span className="text-2xl font-bold text-accent">{articleCount}</span>
+                <p className="text-xs text-muted-foreground">articles indexed</p>
+              </div>
+            )}
+            <Link
+              href="/dashboard"
+              className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
+            >
+              Dashboard
+            </Link>
+          </div>
         </div>
       </header>
 
