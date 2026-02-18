@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 
 interface Source {
   title: string;
@@ -19,6 +19,14 @@ export default function Home() {
   const [result, setResult] = useState<QueryResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [articleCount, setArticleCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/stats")
+      .then((res) => res.json())
+      .then((data) => setArticleCount(data.articleCount))
+      .catch(() => {});
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -53,11 +61,19 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="border-b border-border px-6 py-4">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-xl font-semibold">AI News Intelligence Hub</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Ask questions about the latest AI news
-          </p>
+        <div className="max-w-3xl mx-auto flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-semibold">AI News Intelligence Hub</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Ask questions about the latest AI news
+            </p>
+          </div>
+          {articleCount !== null && (
+            <div className="text-right">
+              <span className="text-2xl font-bold text-accent">{articleCount}</span>
+              <p className="text-xs text-muted-foreground">articles indexed</p>
+            </div>
+          )}
         </div>
       </header>
 
