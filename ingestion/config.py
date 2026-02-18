@@ -92,6 +92,64 @@ RSS_FEEDS = [
         "priority": "medium"
     },
     
+    # Additional Tech News & Analysis
+    {
+        "name": "VentureBeat AI",
+        "url": "https://venturebeat.com/category/ai/feed/",
+        "category": "tech_news",
+        "priority": "high"
+    },
+    {
+        "name": "MarkTechPost",
+        "url": "https://marktechpost.com/feed",
+        "category": "tech_news",
+        "priority": "medium"
+    },
+    {
+        "name": "Unite.AI",
+        "url": "https://www.unite.ai/feed/",
+        "category": "tech_news",
+        "priority": "medium"
+    },
+    {
+        "name": "MIT News AI",
+        "url": "https://news.mit.edu/rss/topic/artificial-intelligence",
+        "category": "research",
+        "priority": "high"
+    },
+    {
+        "name": "Hugging Face Blog",
+        "url": "https://huggingface.co/blog/feed.xml",
+        "category": "ai_company",
+        "priority": "high"
+    },
+
+    # Independent Analysis & Newsletters
+    {
+        "name": "Simon Willison's Blog",
+        "url": "https://simonwillison.net/atom/everything",
+        "category": "community",
+        "priority": "high"
+    },
+    {
+        "name": "The Batch",
+        "url": "https://www.deeplearning.ai/the-batch/feed/",
+        "category": "tech_news",
+        "priority": "high"
+    },
+    {
+        "name": "Google DeepMind Blog",
+        "url": "https://deepmind.google/blog/rss.xml",
+        "category": "research",
+        "priority": "high"
+    },
+    {
+        "name": "Nvidia AI Blog",
+        "url": "https://blogs.nvidia.com/feed/",
+        "category": "ai_company",
+        "priority": "high"
+    },
+
     # Community & Analysis
     {
         "name": "Hacker News",
