@@ -25,6 +25,7 @@ interface KeywordsResponse {
 }
 
 interface ArticleItem {
+  id: string;
   title: string;
   url: string;
   source_name: string;
@@ -36,6 +37,16 @@ interface ArticlesResponse {
   articles: ArticleItem[];
 }
 
+interface ArticleDetail {
+  id: string;
+  title: string;
+  summary: string | null;
+  content: string | null;
+  source_name: string;
+  published_at: string;
+  url: string;
+}
+
 interface LayoutWord {
   text: string;
   size: number;
@@ -45,6 +56,66 @@ interface LayoutWord {
   x: number;
   y: number;
   rotate: number;
+}
+
+/* ------------------------------------------------------------------ */
+/* SVG Icon helpers                                                     */
+/* ------------------------------------------------------------------ */
+
+function CloseIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 14 14"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    >
+      <path d="M1 1l12 12M13 1L1 13" />
+    </svg>
+  );
+}
+
+function InfoIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" />
+      <path d="M12 8h.01" />
+    </svg>
+  );
+}
+
+function FileTextIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+      <path d="M10 9H8" />
+      <path d="M16 13H8" />
+      <path d="M16 17H8" />
+    </svg>
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -67,7 +138,6 @@ function WordCloud({
     y: number;
   } | null>(null);
 
-  // Observe container size for responsiveness — reduced by 15%
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -87,7 +157,6 @@ function WordCloud({
     return () => observer.disconnect();
   }, []);
 
-  // Run d3-cloud layout
   useEffect(() => {
     if (words.length === 0) return;
 
@@ -95,7 +164,6 @@ function WordCloud({
     const maxCount = Math.max(...words.map((w) => w.value));
     const minCount = Math.min(...words.map((w) => w.value));
 
-    // Increased contrast: smaller min, larger max, power 0.7 scale
     const minFont = width < 500 ? 10 : 12;
     const maxFont = width < 500 ? 56 : 80;
 
@@ -184,7 +252,6 @@ function WordCloud({
         </g>
       </svg>
 
-      {/* Tooltip */}
       {tooltip && (
         <div
           className="absolute pointer-events-none z-10 bg-background border border-border rounded-lg px-3 py-2 shadow-lg text-sm"
@@ -230,22 +297,26 @@ function CategoryLegend() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Time Slider                                                         */
+/* Time Slider — only fetches on release                               */
 /* ------------------------------------------------------------------ */
 
 function TimeSlider({
-  value,
-  onChange,
+  displayValue,
+  committedValue,
+  onDrag,
+  onCommit,
 }: {
-  value: number;
-  onChange: (days: number) => void;
+  displayValue: number;
+  committedValue: number;
+  onDrag: (days: number) => void;
+  onCommit: () => void;
 }) {
   return (
     <div className="flex items-center justify-center gap-4 max-w-sm mx-auto">
       <span className="text-sm text-muted-foreground whitespace-nowrap min-w-[80px] text-right">
         Last{" "}
         <span className="font-medium text-foreground">
-          {value} day{value !== 1 ? "s" : ""}
+          {displayValue} day{displayValue !== 1 ? "s" : ""}
         </span>
       </span>
       <input
@@ -253,8 +324,10 @@ function TimeSlider({
         min={1}
         max={14}
         step={1}
-        value={value}
-        onChange={(e) => onChange(parseInt(e.target.value, 10))}
+        value={displayValue}
+        onChange={(e) => onDrag(parseInt(e.target.value, 10))}
+        onMouseUp={onCommit}
+        onTouchEnd={onCommit}
         className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-border
           [&::-webkit-slider-thumb]:appearance-none
           [&::-webkit-slider-thumb]:w-4
@@ -275,7 +348,7 @@ function TimeSlider({
 }
 
 /* ------------------------------------------------------------------ */
-/* Info Modal                                                          */
+/* Info Modal (top 12 keywords)                                        */
 /* ------------------------------------------------------------------ */
 
 function InfoModal({
@@ -297,7 +370,6 @@ function InfoModal({
       }}
     >
       <div className="bg-background border border-border rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
-        {/* Modal header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <h3 className="text-base font-semibold">Top Keywords</h3>
           <button
@@ -305,21 +377,10 @@ function InfoModal({
             onClick={onClose}
             className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
           >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              <path d="M1 1l12 12M13 1L1 13" />
-            </svg>
+            <CloseIcon />
           </button>
         </div>
 
-        {/* Modal body */}
         <div className="px-5 py-3">
           <table className="w-full text-sm">
             <thead>
@@ -337,10 +398,7 @@ function InfoModal({
                     ? ((kw.value / totalArticles) * 100).toFixed(1)
                     : "0";
                 return (
-                  <tr
-                    key={kw.text}
-                    className="border-t border-border/50"
-                  >
+                  <tr key={kw.text} className="border-t border-border/50">
                     <td className="py-2 font-medium">
                       <span className="flex items-center gap-2">
                         <span
@@ -366,6 +424,160 @@ function InfoModal({
 }
 
 /* ------------------------------------------------------------------ */
+/* Article Detail Modal                                                */
+/* ------------------------------------------------------------------ */
+
+function ArticleModal({
+  articleId,
+  onClose,
+}: {
+  articleId: string;
+  onClose: () => void;
+}) {
+  const [article, setArticle] = useState<ArticleDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setError(false);
+    fetch(`/api/explore/article?id=${encodeURIComponent(articleId)}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Not found");
+        return res.json();
+      })
+      .then((d: ArticleDetail) => setArticle(d))
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, [articleId]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="bg-background border border-border rounded-xl shadow-xl w-full max-w-[700px] max-h-[85vh] flex flex-col overflow-hidden">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4 px-6 py-4 border-b border-border shrink-0">
+          <div className="min-w-0">
+            {loading && (
+              <div className="h-5 w-48 bg-muted rounded animate-pulse" />
+            )}
+            {!loading && article && (
+              <>
+                <h3 className="text-lg font-semibold leading-snug">
+                  {article.title}
+                </h3>
+                <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
+                  <span>{article.source_name}</span>
+                  {article.published_at && (
+                    <>
+                      <span>&middot;</span>
+                      <span>
+                        {new Date(article.published_at).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )}
+                      </span>
+                    </>
+                  )}
+                </div>
+              </>
+            )}
+            {!loading && error && (
+              <p className="text-sm text-muted-foreground">
+                Could not load article.
+              </p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground shrink-0 mt-0.5"
+          >
+            <CloseIcon />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="overflow-y-auto flex-1 px-6 py-5">
+          {loading && (
+            <div className="space-y-3">
+              <div className="h-3 w-full bg-muted rounded animate-pulse" />
+              <div className="h-3 w-5/6 bg-muted rounded animate-pulse" />
+              <div className="h-3 w-4/6 bg-muted rounded animate-pulse" />
+              <div className="h-3 w-full bg-muted rounded animate-pulse" />
+            </div>
+          )}
+
+          {!loading && article && (
+            <div
+              className="article-modal-content"
+              style={{
+                fontFamily: "var(--font-merriweather), Georgia, serif",
+                fontSize: "0.95rem",
+                lineHeight: 1.7,
+              }}
+            >
+              {/* Summary */}
+              {article.summary && (
+                <p
+                  className="text-muted-foreground mb-5 pb-5 border-b border-border"
+                  style={{ fontStyle: "italic", lineHeight: 1.6 }}
+                >
+                  {article.summary}
+                </p>
+              )}
+
+              {/* Content */}
+              {article.content ? (
+                <div className="space-y-4">
+                  {article.content.split(/\n\n+/).map((para, i) => (
+                    <p key={i}>{para}</p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-sm">
+                  Full content not available.{" "}
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-accent"
+                  >
+                    Read on source
+                  </a>
+                </p>
+              )}
+
+              {/* Source link */}
+              {article.content && (
+                <div className="mt-6 pt-4 border-t border-border">
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted-foreground hover:text-accent underline transition-colors"
+                  >
+                    Read original article &rarr;
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* Article List                                                        */
 /* ------------------------------------------------------------------ */
 
@@ -373,10 +585,12 @@ function ArticleList({
   keyword,
   days,
   onClear,
+  onViewArticle,
 }: {
   keyword: string;
   days: number;
   onClear: () => void;
+  onViewArticle: (id: string) => void;
 }) {
   const [articles, setArticles] = useState<ArticleItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -394,7 +608,6 @@ function ArticleList({
 
   return (
     <section className="border border-border rounded-lg overflow-hidden">
-      {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-muted/50 border-b border-border">
         <h3 className="text-sm font-semibold">
           Articles about{" "}
@@ -409,7 +622,6 @@ function ArticleList({
         </button>
       </div>
 
-      {/* Body */}
       <div className="max-h-[360px] overflow-y-auto divide-y divide-border">
         {loading && (
           <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
@@ -426,29 +638,45 @@ function ArticleList({
 
         {!loading &&
           articles.map((article, i) => (
-            <div key={`${article.url}-${i}`} className="px-4 py-3 hover:bg-muted/30 transition-colors">
-              <a
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-medium hover:text-accent transition-colors line-clamp-2"
-              >
-                {article.title}
-              </a>
-              <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                <span>{article.source_name}</span>
-                {article.published_at && (
-                  <>
-                    <span>&middot;</span>
-                    <span>
-                      {new Date(article.published_at).toLocaleDateString(
-                        "en-US",
-                        { month: "short", day: "numeric", year: "numeric" }
-                      )}
-                    </span>
-                  </>
-                )}
+            <div
+              key={`${article.url}-${i}`}
+              className="flex items-center gap-3 px-4 py-3 hover:bg-muted/30 transition-colors group"
+            >
+              {/* Article info */}
+              <div className="flex-1 min-w-0">
+                <a
+                  href={article.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium hover:text-accent transition-colors line-clamp-2"
+                >
+                  {article.title}
+                </a>
+                <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                  <span>{article.source_name}</span>
+                  {article.published_at && (
+                    <>
+                      <span>&middot;</span>
+                      <span>
+                        {new Date(article.published_at).toLocaleDateString(
+                          "en-US",
+                          { month: "short", day: "numeric", year: "numeric" }
+                        )}
+                      </span>
+                    </>
+                  )}
+                </div>
               </div>
+
+              {/* Document icon */}
+              <button
+                type="button"
+                onClick={() => onViewArticle(article.id)}
+                className="shrink-0 w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground/50 hover:text-foreground hover:bg-muted transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                title="View article"
+              >
+                <FileTextIcon />
+              </button>
             </div>
           ))}
       </div>
@@ -464,34 +692,43 @@ export default function ExplorePage() {
   const [data, setData] = useState<KeywordsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [days, setDays] = useState(14);
+
+  // Slider: separate display value (updates while dragging) from committed value (triggers fetch)
+  const [sliderValue, setSliderValue] = useState(3);
+  const [committedDays, setCommittedDays] = useState(3);
+
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null);
+  const [viewArticleId, setViewArticleId] = useState<string | null>(null);
 
-  const fetchData = useCallback(
-    (d: number) => {
-      setLoading(true);
-      setError(null);
-      fetch(`/api/explore/keywords?days=${d}`)
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to fetch");
-          return res.json();
-        })
-        .then((resp: KeywordsResponse) => setData(resp))
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false));
-    },
-    []
-  );
-
-  useEffect(() => {
-    fetchData(days);
-  }, [days, fetchData]);
-
-  const handleDaysChange = useCallback((newDays: number) => {
-    setDays(newDays);
-    setSelectedKeyword(null);
+  const fetchData = useCallback((d: number) => {
+    setLoading(true);
+    setError(null);
+    fetch(`/api/explore/keywords?days=${d}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch");
+        return res.json();
+      })
+      .then((resp: KeywordsResponse) => setData(resp))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, []);
+
+  // Fetch when committedDays changes
+  useEffect(() => {
+    fetchData(committedDays);
+  }, [committedDays, fetchData]);
+
+  // Slider: update display only while dragging
+  const handleSliderDrag = useCallback((val: number) => {
+    setSliderValue(val);
+  }, []);
+
+  // Slider: commit value on release
+  const handleSliderCommit = useCallback(() => {
+    setCommittedDays(sliderValue);
+    setSelectedKeyword(null);
+  }, [sliderValue]);
 
   const handleWordClick = useCallback((keyword: string) => {
     setSelectedKeyword((prev) => (prev === keyword ? null : keyword));
@@ -545,7 +782,7 @@ export default function ExplorePage() {
             </div>
             <button
               type="button"
-              onClick={() => fetchData(days)}
+              onClick={() => fetchData(committedDays)}
               className="px-4 py-2 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors text-sm"
             >
               Retry
@@ -556,7 +793,7 @@ export default function ExplorePage() {
         {/* Content */}
         {data && !loading && !error && (
           <div className="space-y-6">
-            {/* Word cloud — no border, transparent bg */}
+            {/* Word cloud */}
             {data.keywords.length >= 5 ? (
               <div className="relative">
                 <WordCloud
@@ -564,27 +801,14 @@ export default function ExplorePage() {
                   onWordClick={handleWordClick}
                 />
 
-                {/* Info icon — bottom-left */}
+                {/* Info icon — bottom-right */}
                 <button
                   type="button"
                   onClick={() => setShowInfoModal(true)}
-                  className="absolute bottom-2 left-2 w-7 h-7 flex items-center justify-center rounded-full border border-border bg-background/80 hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                  className="absolute bottom-2 right-2 w-7 h-7 flex items-center justify-center rounded-full border border-border bg-background/80 hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
                   title="View top keywords"
                 >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 16v-4" />
-                    <path d="M12 8h.01" />
-                  </svg>
+                  <InfoIcon />
                 </button>
               </div>
             ) : (
@@ -597,17 +821,23 @@ export default function ExplorePage() {
             )}
 
             {/* Time slider */}
-            <TimeSlider value={days} onChange={handleDaysChange} />
+            <TimeSlider
+              displayValue={sliderValue}
+              committedValue={committedDays}
+              onDrag={handleSliderDrag}
+              onCommit={handleSliderCommit}
+            />
 
             {/* Legend */}
             <CategoryLegend />
 
-            {/* Article list — shown on keyword click */}
+            {/* Article list */}
             {selectedKeyword && (
               <ArticleList
                 keyword={selectedKeyword}
-                days={days}
+                days={committedDays}
                 onClear={() => setSelectedKeyword(null)}
+                onViewArticle={(id) => setViewArticleId(id)}
               />
             )}
           </div>
@@ -638,6 +868,14 @@ export default function ExplorePage() {
           keywords={data.keywords}
           totalArticles={data.totalArticles}
           onClose={() => setShowInfoModal(false)}
+        />
+      )}
+
+      {/* Article detail modal */}
+      {viewArticleId && (
+        <ArticleModal
+          articleId={viewArticleId}
+          onClose={() => setViewArticleId(null)}
         />
       )}
     </div>

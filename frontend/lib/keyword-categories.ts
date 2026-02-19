@@ -3,7 +3,7 @@ export const KEYWORD_CATEGORIES: Record<
   { color: string; keywords: string[] }
 > = {
   "AI Companies & Models": {
-    color: "#1F2A44", // deep navy
+    color: "#303f6e", // navy blue
     keywords: [
       "OpenAI",
       "Anthropic",

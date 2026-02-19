@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     // Fetch articles that contain this keyword in their keywords array
     const { data: articles, error } = await db
       .from("articles")
-      .select("title, url, source_name, published_at")
+      .select("id, title, url, source_name, published_at")
       .contains("keywords", [keyword])
       .gte("published_at", cutoff)
       .order("published_at", { ascending: false })
