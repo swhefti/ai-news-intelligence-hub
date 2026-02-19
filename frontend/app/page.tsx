@@ -90,6 +90,12 @@ export default function Home() {
               </div>
             )}
             <Link
+              href="/generate"
+              className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
+            >
+              Generate
+            </Link>
+            <Link
               href="/explore"
               className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
             >

@@ -753,6 +753,12 @@ export default function ExplorePage() {
               Chat
             </Link>
             <Link
+              href="/generate"
+              className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
+            >
+              Generate
+            </Link>
+            <Link
               href="/dashboard"
               className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
             >
@@ -852,13 +858,20 @@ export default function ExplorePage() {
           </Link>
           <span className="text-border">|</span>
           <Link
+            href="/generate"
+            className="hover:text-accent transition-colors"
+          >
+            Generate
+          </Link>
+          <span className="text-border">|</span>
+          <span className="text-foreground font-medium">Explore</span>
+          <span className="text-border">|</span>
+          <Link
             href="/dashboard"
             className="hover:text-accent transition-colors"
           >
             Dashboard
           </Link>
-          <span className="text-border">|</span>
-          <span className="text-foreground font-medium">Explore</span>
         </div>
       </footer>
 
