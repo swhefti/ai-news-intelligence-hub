@@ -115,3 +115,8 @@ body {
 .briefing-content a:hover {
   opacity: 0.8;
 }
+
+/* Editorial serif font utility */
+.font-editorial {
+  font-family: var(--font-merriweather), Georgia, "Times New Roman", serif;
+}

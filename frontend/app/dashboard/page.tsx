@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import NavHeader from "@/components/NavHeader";
 import {
   PieChart,
   Pie,
@@ -111,7 +111,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
+        <NavHeader currentPage="sources" />
         <main className="flex-1 flex items-center justify-center">
           <div className="flex items-center gap-3 text-muted-foreground">
             <div className="h-4 w-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
@@ -125,7 +125,7 @@ export default function Dashboard() {
   if (error || !data) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
+        <NavHeader currentPage="sources" />
         <main className="flex-1 flex items-center justify-center">
           <div className="p-4 rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300">
             {error ?? "Failed to load dashboard data"}
@@ -152,7 +152,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <NavHeader currentPage="sources" />
 
       <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-8 space-y-8">
         {/* Summary cards */}
@@ -348,41 +348,6 @@ export default function Dashboard() {
 /* ------------------------------------------------------------------ */
 /* Sub-components                                                      */
 /* ------------------------------------------------------------------ */
-
-function Header() {
-  return (
-    <header className="border-b border-border px-6 py-4">
-      <div className="max-w-5xl mx-auto flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold">Source Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Monitor your AI news knowledge base
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/"
-            className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
-          >
-            Chat
-          </Link>
-          <Link
-            href="/generate"
-            className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
-          >
-            Generate
-          </Link>
-          <Link
-            href="/explore"
-            className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
-          >
-            Explore
-          </Link>
-        </div>
-      </div>
-    </header>
-  );
-}
 
 function SummaryCard({
   label,

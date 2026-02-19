@@ -19,8 +19,8 @@ const merriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: "AI News Intelligence Hub",
-  description: "Ask questions about the latest AI news, powered by RAG",
+  title: "The AI News Intelligence Review",
+  description: "A retrieval-augmented record of the global AI landscape",
 };
 
 export default function RootLayout({

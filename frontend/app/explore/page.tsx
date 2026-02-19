@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import cloud from "d3-cloud";
+import NavHeader from "@/components/NavHeader";
 import {
   KEYWORD_CATEGORIES,
   getCategoryColor,
@@ -736,37 +737,7 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="border-b border-border px-6 py-4">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-semibold">Explore AI Topics</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Discover what&apos;s trending in AI
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/"
-              className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
-            >
-              Chat
-            </Link>
-            <Link
-              href="/generate"
-              className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
-            >
-              Generate
-            </Link>
-            <Link
-              href="/dashboard"
-              className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
-            >
-              Dashboard
-            </Link>
-          </div>
-        </div>
-      </header>
+      <NavHeader currentPage="explore" />
 
       {/* Main content */}
       <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-8">
@@ -853,8 +824,10 @@ export default function ExplorePage() {
       {/* Footer nav */}
       <footer className="border-t border-border px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-center gap-6 text-sm text-muted-foreground">
-          <Link href="/" className="hover:text-accent transition-colors">
-            Home
+          <span className="text-foreground font-medium">Explore</span>
+          <span className="text-border">|</span>
+          <Link href="/chat" className="hover:text-accent transition-colors">
+            Chat
           </Link>
           <span className="text-border">|</span>
           <Link
@@ -864,13 +837,11 @@ export default function ExplorePage() {
             Generate
           </Link>
           <span className="text-border">|</span>
-          <span className="text-foreground font-medium">Explore</span>
-          <span className="text-border">|</span>
           <Link
             href="/dashboard"
             className="hover:text-accent transition-colors"
           >
-            Dashboard
+            Sources
           </Link>
         </div>
       </footer>

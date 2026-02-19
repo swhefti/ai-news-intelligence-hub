@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import NavHeader from "@/components/NavHeader";
 import {
   KEYWORD_CATEGORIES,
   getCategoryColor,
@@ -699,37 +700,7 @@ export default function GeneratePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="border-b border-border px-6 py-4">
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-semibold">Generate Briefing</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Get an AI-powered summary of the latest AI news
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/"
-              className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
-            >
-              Chat
-            </Link>
-            <Link
-              href="/explore"
-              className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
-            >
-              Explore
-            </Link>
-            <Link
-              href="/dashboard"
-              className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
-            >
-              Dashboard
-            </Link>
-          </div>
-        </div>
-      </header>
+      <NavHeader currentPage="generate" />
 
       {/* Main content */}
       <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8">
@@ -877,10 +848,6 @@ export default function GeneratePage() {
       {/* Footer nav */}
       <footer className="border-t border-border px-6 py-4">
         <div className="max-w-3xl mx-auto flex items-center justify-center gap-6 text-sm text-muted-foreground">
-          <Link href="/" className="hover:text-accent transition-colors">
-            Home
-          </Link>
-          <span className="text-border">|</span>
           <Link
             href="/explore"
             className="hover:text-accent transition-colors"
@@ -888,14 +855,18 @@ export default function GeneratePage() {
             Explore
           </Link>
           <span className="text-border">|</span>
+          <Link href="/chat" className="hover:text-accent transition-colors">
+            Chat
+          </Link>
+          <span className="text-border">|</span>
+          <span className="text-foreground font-medium">Generate</span>
+          <span className="text-border">|</span>
           <Link
             href="/dashboard"
             className="hover:text-accent transition-colors"
           >
-            Dashboard
+            Sources
           </Link>
-          <span className="text-border">|</span>
-          <span className="text-foreground font-medium">Generate</span>
         </div>
       </footer>
     </div>
