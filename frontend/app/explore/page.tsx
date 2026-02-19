@@ -18,10 +18,22 @@ interface KeywordData {
   value: number;
 }
 
-interface ApiResponse {
+interface KeywordsResponse {
   keywords: KeywordData[];
   totalArticles: number;
-  dateRange: { from: string | null; to: string | null };
+  days: number;
+}
+
+interface ArticleItem {
+  title: string;
+  url: string;
+  source_name: string;
+  published_at: string;
+}
+
+interface ArticlesResponse {
+  keyword: string;
+  articles: ArticleItem[];
 }
 
 interface LayoutWord {
@@ -39,26 +51,33 @@ interface LayoutWord {
 /* Word Cloud Component                                                */
 /* ------------------------------------------------------------------ */
 
-function WordCloud({ words }: { words: KeywordData[] }) {
+function WordCloud({
+  words,
+  onWordClick,
+}: {
+  words: KeywordData[];
+  onWordClick: (keyword: string) => void;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [layoutWords, setLayoutWords] = useState<LayoutWord[]>([]);
-  const [dimensions, setDimensions] = useState({ width: 800, height: 500 });
+  const [dimensions, setDimensions] = useState({ width: 680, height: 425 });
   const [tooltip, setTooltip] = useState<{
     word: LayoutWord;
     x: number;
     y: number;
   } | null>(null);
 
-  // Observe container size for responsiveness
+  // Observe container size for responsiveness — reduced by 15%
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        const { width } = entry.contentRect;
-        if (width > 0) {
-          const height = Math.max(400, Math.min(width * 0.6, 600));
+        const { width: rawWidth } = entry.contentRect;
+        if (rawWidth > 0) {
+          const width = Math.round(rawWidth * 0.85);
+          const height = Math.max(340, Math.min(width * 0.6, 510));
           setDimensions({ width, height });
         }
       }
@@ -76,15 +95,14 @@ function WordCloud({ words }: { words: KeywordData[] }) {
     const maxCount = Math.max(...words.map((w) => w.value));
     const minCount = Math.min(...words.map((w) => w.value));
 
-    // Scale font size: map count range to font size range
-    const minFont = width < 500 ? 12 : 16;
-    const maxFont = width < 500 ? 48 : 72;
+    // Increased contrast: smaller min, larger max, power 0.7 scale
+    const minFont = width < 500 ? 10 : 12;
+    const maxFont = width < 500 ? 56 : 80;
 
     function fontSize(count: number) {
       if (maxCount === minCount) return (minFont + maxFont) / 2;
       const t = (count - minCount) / (maxCount - minCount);
-      // Use sqrt scale for better visual distribution
-      return minFont + Math.sqrt(t) * (maxFont - minFont);
+      return minFont + Math.pow(t, 0.7) * (maxFont - minFont);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -96,7 +114,7 @@ function WordCloud({ words }: { words: KeywordData[] }) {
       .font("Inter, sans-serif")
       .fontWeight("bold")
       .fontSize((d: { value: number }) => fontSize(d.value))
-      .random(() => 0.5) // deterministic seed
+      .random(() => 0.5)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .on("end", (output: any[]) => {
         const result: LayoutWord[] = output.map((w) => ({
@@ -132,16 +150,12 @@ function WordCloud({ words }: { words: KeywordData[] }) {
     setTooltip(null);
   }, []);
 
-  const handleClick = useCallback((word: LayoutWord) => {
-    console.log("Clicked keyword:", word.text, "| Count:", word.value, "| Category:", word.category);
-  }, []);
-
   return (
-    <div ref={containerRef} className="relative w-full">
+    <div ref={containerRef} className="relative w-full flex justify-center">
       <svg
         width={dimensions.width}
         height={dimensions.height}
-        className="block mx-auto"
+        className="block"
       >
         <g
           transform={`translate(${dimensions.width / 2}, ${dimensions.height / 2})`}
@@ -162,7 +176,7 @@ function WordCloud({ words }: { words: KeywordData[] }) {
               opacity={tooltip && tooltip.word.text !== word.text ? 0.4 : 1}
               onMouseEnter={(e) => handleMouseEnter(word, e)}
               onMouseLeave={handleMouseLeave}
-              onClick={() => handleClick(word)}
+              onClick={() => onWordClick(word.text)}
             >
               {word.text}
             </text>
@@ -205,13 +219,240 @@ function CategoryLegend() {
       {Object.entries(KEYWORD_CATEGORIES).map(([category, data]) => (
         <div key={category} className="flex items-center gap-2">
           <span
-            className="inline-block w-3 h-3 rounded-full shrink-0"
+            className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
             style={{ backgroundColor: data.color }}
           />
-          <span className="text-sm text-muted-foreground">{category}</span>
+          <span className="text-xs text-muted-foreground">{category}</span>
         </div>
       ))}
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Time Slider                                                         */
+/* ------------------------------------------------------------------ */
+
+function TimeSlider({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (days: number) => void;
+}) {
+  return (
+    <div className="flex items-center justify-center gap-4 max-w-sm mx-auto">
+      <span className="text-sm text-muted-foreground whitespace-nowrap min-w-[80px] text-right">
+        Last{" "}
+        <span className="font-medium text-foreground">
+          {value} day{value !== 1 ? "s" : ""}
+        </span>
+      </span>
+      <input
+        type="range"
+        min={1}
+        max={14}
+        step={1}
+        value={value}
+        onChange={(e) => onChange(parseInt(e.target.value, 10))}
+        className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-border
+          [&::-webkit-slider-thumb]:appearance-none
+          [&::-webkit-slider-thumb]:w-4
+          [&::-webkit-slider-thumb]:h-4
+          [&::-webkit-slider-thumb]:rounded-full
+          [&::-webkit-slider-thumb]:bg-foreground
+          [&::-webkit-slider-thumb]:shadow-sm
+          [&::-webkit-slider-thumb]:cursor-pointer
+          [&::-moz-range-thumb]:w-4
+          [&::-moz-range-thumb]:h-4
+          [&::-moz-range-thumb]:rounded-full
+          [&::-moz-range-thumb]:bg-foreground
+          [&::-moz-range-thumb]:border-0
+          [&::-moz-range-thumb]:cursor-pointer"
+      />
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Info Modal                                                          */
+/* ------------------------------------------------------------------ */
+
+function InfoModal({
+  keywords,
+  totalArticles,
+  onClose,
+}: {
+  keywords: KeywordData[];
+  totalArticles: number;
+  onClose: () => void;
+}) {
+  const top12 = keywords.slice(0, 12);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="bg-background border border-border rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
+        {/* Modal header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+          <h3 className="text-base font-semibold">Top Keywords</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <path d="M1 1l12 12M13 1L1 13" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Modal body */}
+        <div className="px-5 py-3">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-muted-foreground">
+                <th className="text-left py-2 font-medium">Keyword</th>
+                <th className="text-right py-2 font-medium">Articles</th>
+                <th className="text-right py-2 font-medium">% of Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {top12.map((kw) => {
+                const color = getCategoryColor(kw.text);
+                const pct =
+                  totalArticles > 0
+                    ? ((kw.value / totalArticles) * 100).toFixed(1)
+                    : "0";
+                return (
+                  <tr
+                    key={kw.text}
+                    className="border-t border-border/50"
+                  >
+                    <td className="py-2 font-medium">
+                      <span className="flex items-center gap-2">
+                        <span
+                          className="inline-block w-2 h-2 rounded-full shrink-0"
+                          style={{ backgroundColor: color }}
+                        />
+                        {kw.text}
+                      </span>
+                    </td>
+                    <td className="py-2 text-right font-mono">{kw.value}</td>
+                    <td className="py-2 text-right text-muted-foreground">
+                      {pct}%
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Article List                                                        */
+/* ------------------------------------------------------------------ */
+
+function ArticleList({
+  keyword,
+  days,
+  onClear,
+}: {
+  keyword: string;
+  days: number;
+  onClear: () => void;
+}) {
+  const [articles, setArticles] = useState<ArticleItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(
+      `/api/explore/articles?keyword=${encodeURIComponent(keyword)}&days=${days}`
+    )
+      .then((res) => res.json())
+      .then((d: ArticlesResponse) => setArticles(d.articles ?? []))
+      .catch(() => setArticles([]))
+      .finally(() => setLoading(false));
+  }, [keyword, days]);
+
+  return (
+    <section className="border border-border rounded-lg overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 bg-muted/50 border-b border-border">
+        <h3 className="text-sm font-semibold">
+          Articles about{" "}
+          <span style={{ color: getCategoryColor(keyword) }}>{keyword}</span>
+        </h3>
+        <button
+          type="button"
+          onClick={onClear}
+          className="text-xs px-2.5 py-1 rounded-md border border-border hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+        >
+          Clear selection
+        </button>
+      </div>
+
+      {/* Body */}
+      <div className="max-h-[360px] overflow-y-auto divide-y divide-border">
+        {loading && (
+          <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
+            <div className="h-3.5 w-3.5 border-2 border-accent border-t-transparent rounded-full animate-spin mr-2" />
+            Loading articles...
+          </div>
+        )}
+
+        {!loading && articles.length === 0 && (
+          <div className="py-8 text-center text-sm text-muted-foreground">
+            No articles found for this keyword in the selected time range.
+          </div>
+        )}
+
+        {!loading &&
+          articles.map((article, i) => (
+            <div key={`${article.url}-${i}`} className="px-4 py-3 hover:bg-muted/30 transition-colors">
+              <a
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium hover:text-accent transition-colors line-clamp-2"
+              >
+                {article.title}
+              </a>
+              <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                <span>{article.source_name}</span>
+                {article.published_at && (
+                  <>
+                    <span>&middot;</span>
+                    <span>
+                      {new Date(article.published_at).toLocaleDateString(
+                        "en-US",
+                        { month: "short", day: "numeric", year: "numeric" }
+                      )}
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
+      </div>
+    </section>
   );
 }
 
@@ -220,26 +461,41 @@ function CategoryLegend() {
 /* ------------------------------------------------------------------ */
 
 export default function ExplorePage() {
-  const [data, setData] = useState<ApiResponse | null>(null);
+  const [data, setData] = useState<KeywordsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [days, setDays] = useState(14);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null);
 
-  const fetchData = useCallback(() => {
-    setLoading(true);
-    setError(null);
-    fetch("/api/explore/keywords")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch");
-        return res.json();
-      })
-      .then((d: ApiResponse) => setData(d))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, []);
+  const fetchData = useCallback(
+    (d: number) => {
+      setLoading(true);
+      setError(null);
+      fetch(`/api/explore/keywords?days=${d}`)
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to fetch");
+          return res.json();
+        })
+        .then((resp: KeywordsResponse) => setData(resp))
+        .catch((err) => setError(err.message))
+        .finally(() => setLoading(false));
+    },
+    []
+  );
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    fetchData(days);
+  }, [days, fetchData]);
+
+  const handleDaysChange = useCallback((newDays: number) => {
+    setDays(newDays);
+    setSelectedKeyword(null);
+  }, []);
+
+  const handleWordClick = useCallback((keyword: string) => {
+    setSelectedKeyword((prev) => (prev === keyword ? null : keyword));
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -249,9 +505,7 @@ export default function ExplorePage() {
           <div>
             <h1 className="text-xl font-semibold">Explore AI Topics</h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              {data
-                ? `Discover trending topics across ${data.totalArticles} articles`
-                : "Discover trending topics in AI news"}
+              Discover what&apos;s trending in AI
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -284,14 +538,14 @@ export default function ExplorePage() {
         )}
 
         {/* Error state */}
-        {error && (
+        {error && !loading && (
           <div className="flex flex-col items-center py-32 gap-4">
             <div className="p-4 rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300">
               {error}
             </div>
             <button
               type="button"
-              onClick={fetchData}
+              onClick={() => fetchData(days)}
               className="px-4 py-2 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors text-sm"
             >
               Retry
@@ -299,36 +553,39 @@ export default function ExplorePage() {
           </div>
         )}
 
-        {/* Word cloud + legend */}
+        {/* Content */}
         {data && !loading && !error && (
           <div className="space-y-6">
-            {/* Date range info */}
-            {data.dateRange.from && data.dateRange.to && (
-              <p className="text-center text-sm text-muted-foreground">
-                Covering articles from{" "}
-                <span className="font-medium text-foreground">
-                  {new Date(data.dateRange.from + "T00:00:00").toLocaleDateString(
-                    "en-US",
-                    { month: "short", day: "numeric", year: "numeric" }
-                  )}
-                </span>{" "}
-                to{" "}
-                <span className="font-medium text-foreground">
-                  {new Date(data.dateRange.to + "T00:00:00").toLocaleDateString(
-                    "en-US",
-                    { month: "short", day: "numeric", year: "numeric" }
-                  )}
-                </span>
-              </p>
-            )}
-
-            {/* Legend */}
-            <CategoryLegend />
-
-            {/* Word cloud container */}
+            {/* Word cloud — no border, transparent bg */}
             {data.keywords.length >= 5 ? (
-              <div className="border border-border rounded-xl bg-muted/30 p-4 overflow-hidden">
-                <WordCloud words={data.keywords} />
+              <div className="relative">
+                <WordCloud
+                  words={data.keywords}
+                  onWordClick={handleWordClick}
+                />
+
+                {/* Info icon — bottom-left */}
+                <button
+                  type="button"
+                  onClick={() => setShowInfoModal(true)}
+                  className="absolute bottom-2 left-2 w-7 h-7 flex items-center justify-center rounded-full border border-border bg-background/80 hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                  title="View top keywords"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 16v-4" />
+                    <path d="M12 8h.01" />
+                  </svg>
+                </button>
               </div>
             ) : (
               <div className="flex items-center justify-center py-32 text-muted-foreground">
@@ -339,70 +596,19 @@ export default function ExplorePage() {
               </div>
             )}
 
-            {/* Keyword stats table */}
-            {data.keywords.length > 0 && (
-              <section>
-                <h2 className="text-lg font-semibold mb-3">
-                  All Keywords ({data.keywords.length})
-                </h2>
-                <div className="border border-border rounded-lg overflow-hidden">
-                  <div className="max-h-[400px] overflow-y-auto">
-                    <table className="w-full text-sm">
-                      <thead className="sticky top-0">
-                        <tr className="border-b border-border bg-muted">
-                          <th className="text-left px-4 py-2.5 font-medium">
-                            Keyword
-                          </th>
-                          <th className="text-left px-4 py-2.5 font-medium">
-                            Category
-                          </th>
-                          <th className="text-right px-4 py-2.5 font-medium">
-                            Articles
-                          </th>
-                          <th className="text-right px-4 py-2.5 font-medium">
-                            % of Total
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {data.keywords.map((kw) => {
-                          const color = getCategoryColor(kw.text);
-                          const category = getCategoryName(kw.text);
-                          const pct =
-                            data.totalArticles > 0
-                              ? ((kw.value / data.totalArticles) * 100).toFixed(
-                                  1
-                                )
-                              : "0";
-                          return (
-                            <tr
-                              key={kw.text}
-                              className="border-b border-border last:border-b-0 hover:bg-muted/50"
-                            >
-                              <td className="px-4 py-2.5 font-medium flex items-center gap-2">
-                                <span
-                                  className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
-                                  style={{ backgroundColor: color }}
-                                />
-                                {kw.text}
-                              </td>
-                              <td className="px-4 py-2.5 text-muted-foreground">
-                                {category}
-                              </td>
-                              <td className="px-4 py-2.5 text-right font-mono">
-                                {kw.value}
-                              </td>
-                              <td className="px-4 py-2.5 text-right text-muted-foreground">
-                                {pct}%
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </section>
+            {/* Time slider */}
+            <TimeSlider value={days} onChange={handleDaysChange} />
+
+            {/* Legend */}
+            <CategoryLegend />
+
+            {/* Article list — shown on keyword click */}
+            {selectedKeyword && (
+              <ArticleList
+                keyword={selectedKeyword}
+                days={days}
+                onClear={() => setSelectedKeyword(null)}
+              />
             )}
           </div>
         )}
@@ -425,6 +631,15 @@ export default function ExplorePage() {
           <span className="text-foreground font-medium">Explore</span>
         </div>
       </footer>
+
+      {/* Info modal */}
+      {showInfoModal && data && (
+        <InfoModal
+          keywords={data.keywords}
+          totalArticles={data.totalArticles}
+          onClose={() => setShowInfoModal(false)}
+        />
+      )}
     </div>
   );
 }

@@ -17,50 +17,45 @@ export async function GET(request: NextRequest) {
   try {
     const db = getSupabase();
     const { searchParams } = new URL(request.url);
+    const keyword = searchParams.get("keyword");
     const days = parseInt(searchParams.get("days") ?? "14", 10);
     const clampedDays = Math.max(1, Math.min(days, 365));
+
+    if (!keyword) {
+      return NextResponse.json(
+        { error: "keyword parameter is required" },
+        { status: 400 }
+      );
+    }
 
     // Calculate the cutoff date
     const cutoff = new Date(
       Date.now() - clampedDays * 24 * 60 * 60 * 1000
     ).toISOString();
 
-    // Fetch articles with keywords filtered by date range
-    const { data: articles, error, count } = await db
+    // Fetch articles that contain this keyword in their keywords array
+    const { data: articles, error } = await db
       .from("articles")
-      .select("keywords, published_at", { count: "exact" })
-      .gte("published_at", cutoff);
+      .select("title, url, source_name, published_at")
+      .contains("keywords", [keyword])
+      .gte("published_at", cutoff)
+      .order("published_at", { ascending: false })
+      .limit(50);
 
     if (error) {
-      console.error("Explore keywords error:", error);
+      console.error("Explore articles error:", error);
       return NextResponse.json(
-        { error: "Failed to fetch keyword data" },
+        { error: "Failed to fetch articles" },
         { status: 500 }
       );
     }
 
-    // Count keyword frequencies
-    const keywordCounts = new Map<string, number>();
-
-    for (const article of articles ?? []) {
-      const keywords: string[] = article.keywords ?? [];
-      for (const kw of keywords) {
-        keywordCounts.set(kw, (keywordCounts.get(kw) ?? 0) + 1);
-      }
-    }
-
-    // Build sorted keyword list
-    const keywords = Array.from(keywordCounts.entries())
-      .map(([text, value]) => ({ text, value }))
-      .sort((a, b) => b.value - a.value);
-
     return NextResponse.json({
-      keywords,
-      totalArticles: count ?? 0,
-      days: clampedDays,
+      keyword,
+      articles: articles ?? [],
     });
   } catch (error) {
-    console.error("Explore keywords API error:", error);
+    console.error("Explore articles API error:", error);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

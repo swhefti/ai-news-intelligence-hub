@@ -3,7 +3,7 @@ export const KEYWORD_CATEGORIES: Record<
   { color: string; keywords: string[] }
 > = {
   "AI Companies & Models": {
-    color: "#6366f1", // indigo
+    color: "#1F2A44", // deep navy
     keywords: [
       "OpenAI",
       "Anthropic",
@@ -18,7 +18,7 @@ export const KEYWORD_CATEGORIES: Record<
     ],
   },
   "Technical Concepts": {
-    color: "#10b981", // emerald
+    color: "#2E7D6B", // teal
     keywords: [
       "AI Agents",
       "LLMs",
@@ -33,7 +33,7 @@ export const KEYWORD_CATEGORIES: Record<
     ],
   },
   Applications: {
-    color: "#f59e0b", // amber
+    color: "#E3B23C", // warm gold
     keywords: [
       "Enterprise AI",
       "Healthcare AI",
@@ -46,7 +46,7 @@ export const KEYWORD_CATEGORIES: Record<
     ],
   },
   "Industry & Society": {
-    color: "#ef4444", // red
+    color: "#C05746", // muted red
     keywords: [
       "AI Safety",
       "AI Ethics",
