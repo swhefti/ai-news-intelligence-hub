@@ -359,12 +359,20 @@ function Header() {
             Monitor your AI news knowledge base
           </p>
         </div>
-        <Link
-          href="/"
-          className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
-        >
-          &larr; Back to Chat
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/"
+            className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
+          >
+            Chat
+          </Link>
+          <Link
+            href="/explore"
+            className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
+          >
+            Explore
+          </Link>
+        </div>
       </div>
     </header>
   );

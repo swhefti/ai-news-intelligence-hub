@@ -1,0 +1,841 @@
+{
+  "total_articles_analyzed": 249,
+  "total_batches": 10,
+  "total_unique_topics": 99,
+  "topics": [
+    {
+      "name": "Ai Agents",
+      "count": 35,
+      "examples": [
+        "AI Agent Lands PRs in Major OSS Projects",
+        "AI Agents for Inventory Control: Human-LLM-OR Complementarity",
+        "AI agents now have their own Reddit-style social network, and it's getting weird fast",
+        "AI companies want you to stop chatting with bots and start managing them",
+        "Ask HN: What are the biggest limitations of agentic AI in real-world workflows?"
+      ]
+    },
+    {
+      "name": "Openai",
+      "count": 29,
+      "examples": [
+        "A business that scales with the value of intelligence",
+        "After all the hype, some AI experts don't think OpenClaw is all that exciting",
+        "All the important news from the ongoing India AI Impact Summit",
+        "Cisco and OpenAI redefine enterprise engineering with AI agents",
+        "GPT-5.2 derives a new result in theoretical physics"
+      ]
+    },
+    {
+      "name": "Reinforcement Learning",
+      "count": 23,
+      "examples": [
+        "Adaptive traffic signal control optimization using a novel road partition and multi-channel state representation method",
+        "AstRL: Analog and Mixed-Signal Circuit Synthesis with Deep Reinforcement Learning",
+        "Constraint-Rectified Training for Efficient Chain-of-Thought",
+        "Energy-Aware Reinforcement Learning for Robotic Manipulation",
+        "Flow-Factory: A Unified Framework for Reinforcement Learning in Flow-Matching Models"
+      ]
+    },
+    {
+      "name": "Chatgpt",
+      "count": 20,
+      "examples": [
+        "Bringing ChatGPT to GenAI.mil",
+        "India has 100M weekly active ChatGPT users, Sam Altman says",
+        "Inside GPT-5 for Work: How Businesses Use GPT-5",
+        "Introducing ChatGPT Go, now available worldwide",
+        "Introducing Lockdown Mode and Elevated Risk labels in ChatGPT"
+      ]
+    },
+    {
+      "name": "Llm",
+      "count": 20,
+      "examples": [
+        "A Lightweight LLM Framework for Disaster Humanitarian Information Classification",
+        "Agent Skills for Large Language Models: Architecture, Acquisition, Security, and the Path Forward",
+        "From Biased Chatbots to Biased Agents: Examining Role Assignment Effects on LLM Agent Robustness",
+        "Intent-Driven Smart Manufacturing Integrating Knowledge Graphs and Large Language Models",
+        "Interface-Off: Which LLM designs the best marketing site?"
+      ]
+    },
+    {
+      "name": "Code Generation",
+      "count": 17,
+      "examples": [
+        "AgentDocks \u2013 open-source GUI for AI agents that work on your real codebase",
+        "Beyond rate limits: scaling access to Codex and Sora",
+        "CodeForge \u2013 100 AI agents review your code like hostile attackers",
+        "Developers say AI coding tools work\u2014and that's precisely what worries them",
+        "Fat-P: 745K-line C++20 library written by AI"
+      ]
+    },
+    {
+      "name": "Enterprise Ai",
+      "count": 13,
+      "examples": [
+        "Airbnb plans to bake in AI features for search, discovery and support",
+        "Cisco and OpenAI redefine enterprise engineering with AI agents",
+        "How Indeed uses AI to help evolve the job search",
+        "How data and AI will transform contact centres for financial services",
+        "PVH reimagines the future of fashion with OpenAI"
+      ]
+    },
+    {
+      "name": "Ai Safety",
+      "count": 10,
+      "examples": [
+        "After spooking Hollywood, ByteDance will tweak safeguards on new AI model",
+        "Anthropic and the Pentagon are reportedly arguing over Claude usage",
+        "Consistency of Large Reasoning Models Under Multi-Turn Attacks",
+        "EMEA Youth & Wellbeing Grant",
+        "From Biased Chatbots to Biased Agents: Examining Role Assignment Effects on LLM Agent Robustness"
+      ]
+    },
+    {
+      "name": "Healthcare Ai",
+      "count": 10,
+      "examples": [
+        "AI-equipped drones study dolphins on the edge of extinction",
+        "ALS stole this musician's voice. AI let him sing again.",
+        "EMEA Youth & Wellbeing Grant",
+        "Exploring Accurate and Transparent Domain Adaptation in Predictive Healthcare via Concept-Grounded Orthogonal Inference",
+        "Horizon 1000: Advancing AI for primary healthcare"
+      ]
+    },
+    {
+      "name": "Ai Infrastructure",
+      "count": 9,
+      "examples": [
+        "As AI data centers hit power limits, Peak XV backs Indian startup C2i to fix the bottleneck",
+        "Blackstone backs Neysa in up to $1.2B financing as India pushes to build domestic AI infrastructure",
+        "In our latest podcast, hear how the \"Smoke Jumpers\" team brings Gemini to billions of people.",
+        "Microsoft open sources its 'farm of the future' toolkit",
+        "OpenAI partners with Cerebras"
+      ]
+    },
+    {
+      "name": "Cybersecurity",
+      "count": 9,
+      "examples": [
+        "AI is already making online crimes easier. It could get much worse",
+        "Hackers made death threats against this security researcher. Big mistake.",
+        "Introducing Trusted Access for Cyber",
+        "Malicious packages for dYdX cryptocurrency exchange empties user wallets",
+        "Microsoft releases urgent Office patch. Russian-state hackers pounce."
+      ]
+    },
+    {
+      "name": "Gemini",
+      "count": 9,
+      "examples": [
+        "Attackers prompted Gemini over 100,000 times while trying to clone it, Google says",
+        "Gemini 3 Deep Think: Advancing science, research and engineering",
+        "In our latest podcast, hear how the \"Smoke Jumpers\" team brings Gemini to billions of people.",
+        "Just ask anything: a seamless new Search experience",
+        "Watch our new Gemini ad ahead of football's biggest weekend"
+      ]
+    },
+    {
+      "name": "Gpt Models",
+      "count": 9,
+      "examples": [
+        "Inside OpenAI's in-house data agent",
+        "Inside Praktika's conversational approach to language learning",
+        "Retiring GPT-4o, GPT-4.1, GPT-4.1 mini, and OpenAI o4-mini in ChatGPT"
+      ]
+    },
+    {
+      "name": "Microsoft Ai",
+      "count": 8,
+      "examples": [
+        "A conversation with Kevin Scott: What's next in AI",
+        "From Hot Wheels to handling content: How brands are using Microsoft AI to be more productive and imaginative"
+      ]
+    },
+    {
+      "name": "Ai Benchmarking",
+      "count": 7,
+      "examples": [
+        "A Theoretical Framework for Adaptive Utility-Weighted Benchmarking",
+        "Advancing AI benchmarking with Game Arena",
+        "Bench-MFG: A Benchmark Suite for Learning in Stationary Mean Field Games",
+        "BrowseComp-$V^3$: A Visual, Vertical, and Verifiable Benchmark for Multimodal Browsing Agents",
+        "SkillsBench: Benchmarking How Well Agent Skills Work Across Diverse Tasks"
+      ]
+    },
+    {
+      "name": "Education",
+      "count": 7,
+      "examples": [
+        "Inside Praktika's conversational approach to language learning",
+        "Introducing Community Benchmarks on Kaggle",
+        "Introducing Edu for Countries",
+        "Learners and educators are AI's new 'super users'",
+        "Online math tutoring service uses AI to help boost students' skills and confidence"
+      ]
+    },
+    {
+      "name": "Multimodal Ai",
+      "count": 7,
+      "examples": [
+        "AMPS: Adaptive Modality Preference Steering via Functional Entropy",
+        "BrowseComp-$V^3$: A Visual, Vertical, and Verifiable Benchmark for Multimodal Browsing Agents",
+        "DragDiffusion: Interactive Point-Based Editing with Diffusion Models",
+        "OmniCustom: Sync Audio-Video Customization Via Joint Audio-Video Generation Model",
+        "The Download: unraveling a death threat mystery, and AI voice recreation for musicians"
+      ]
+    },
+    {
+      "name": "Claude",
+      "count": 6,
+      "examples": [
+        "AI companies want you to stop chatting with bots and start managing them",
+        "Anthropic and the Pentagon are reportedly arguing over Claude usage",
+        "Does Anthropic believe its AI is conscious, or is that just what it wants Claude to think?",
+        "Memory Plugin for Claude Code",
+        "Should AI chatbots have ads? Anthropic says no."
+      ]
+    },
+    {
+      "name": "Codex",
+      "count": 6,
+      "examples": [
+        "Inside OpenAI's in-house data agent",
+        "Introducing GPT-5.3-Codex",
+        "Unlocking the Codex harness: how we built the App Server",
+        "Unrolling the Codex agent loop"
+      ]
+    },
+    {
+      "name": "Cuda Optimization",
+      "count": 6,
+      "examples": [
+        "Adaptive traffic signal control optimization using a novel road partition and multi-channel state representation method",
+        "High-dimensional Level Set Estimation with Trust Regions and Double Acquisition Functions",
+        "OptiML: An End-to-End Framework for Program Synthesis and CUDA Kernel Optimization",
+        "Quantum walk inspired JPEG compression of images",
+        "Tight Bounds for Logistic Regression with Large Stepsize Gradient Descent in Low Dimension"
+      ]
+    },
+    {
+      "name": "Language Models",
+      "count": 6,
+      "examples": [
+        "Abstractive Red-Teaming of Language Model Character",
+        "Designing RNAs with Language Models",
+        "Synthetic Interaction Data for Scalable Personalization in Large Language Models"
+      ]
+    },
+    {
+      "name": "Video Generation",
+      "count": 5,
+      "examples": [
+        "AI can't make good video game worlds yet, and it might never be able to",
+        "Beyond rate limits: scaling access to Codex and Sora",
+        "Hollywood isn't happy about the new Seedance 2.0 video generator",
+        "How Higgsfield turns simple ideas into cinematic social videos",
+        "How animators and AI researchers made 'Dear Upstairs Neighbors'"
+      ]
+    },
+    {
+      "name": "Accessibility",
+      "count": 4,
+      "examples": [
+        "AI-Mimi is building inclusive TV experiences for Deaf and Hard of Hearing user in Japan",
+        "Helping kids and teens learn and grow online on Safer Internet Day",
+        "Natively Adaptive Interfaces: A new framework for AI accessibility",
+        "The opportunity at home \u2013 can AI drive innovation in personal assistant devices and sign language?"
+      ]
+    },
+    {
+      "name": "Advertising",
+      "count": 4,
+      "examples": [
+        "OpenAI is hoppin' mad about Anthropic's new Super Bowl TV ads",
+        "OpenAI researcher quits over ChatGPT ads, warns of \"Facebook\" path",
+        "Our approach to advertising and expanding access to ChatGPT",
+        "Testing ads in ChatGPT"
+      ]
+    },
+    {
+      "name": "Ai Security",
+      "count": 4,
+      "examples": [
+        "Notepad++ users take note: It's time to check if you're hacked",
+        "Security audit for LLM skill files: skillaudit.sh",
+        "The rise of Moltbook suggests viral AI prompts may be the next big security threat"
+      ]
+    },
+    {
+      "name": "Google",
+      "count": 4,
+      "examples": [
+        "How Nano Banana got its name",
+        "Introducing Community Benchmarks on Kaggle",
+        "Learners and educators are AI's new 'super users'",
+        "Longtime NPR host David Greene sues Google over NotebookLM voice"
+      ]
+    },
+    {
+      "name": "Neural Networks",
+      "count": 4,
+      "examples": [
+        "A Machine Learning Approach to the Nirenberg Problem",
+        "Geometric separation and constructive universal approximation with two hidden layers",
+        "Rational Neural Networks have Expressivity Advantages"
+      ]
+    },
+    {
+      "name": "Vision-Language",
+      "count": 4,
+      "examples": [
+        "ForeAct: Steering Your VLA with Efficient Visual Foresight Planning",
+        "Language-Guided Invariance Probing of Vision-Language Models",
+        "What does RL improve for Visual Reasoning? A Frankenstein-Style Analysis"
+      ]
+    },
+    {
+      "name": "Xai",
+      "count": 4,
+      "examples": [
+        "Is safety 'dead' at xAI?",
+        "What's behind the mass exodus at xAI?",
+        "Why top talent is walking away from OpenAI and xAI",
+        "X-SYS: A Reference Architecture for Interactive Explanation Systems"
+      ]
+    },
+    {
+      "name": "Anomaly Detection",
+      "count": 3,
+      "examples": [
+        "Efficient Personalized Federated PCA with Manifold Optimization for IoT Anomaly Detection",
+        "Power Interpretable Causal ODE Networks",
+        "Vehicle behaviour estimation for abnormal event detection using distributed fiber optic sensing"
+      ]
+    },
+    {
+      "name": "Attention Mechanisms",
+      "count": 3,
+      "examples": [
+        "HyperMLP: An Integrated Perspective for Sequence Modeling",
+        "Multi-Head Attention as a Source of Catastrophic Forgetting in MoE Transformers",
+        "SLA2: Sparse-Linear Attention with Learnable Routing and QAT"
+      ]
+    },
+    {
+      "name": "Computer Vision",
+      "count": 3,
+      "examples": [
+        "DragDiffusion: Interactive Point-Based Editing with Diffusion Models",
+        "Visible and Hyperspectral Imaging for Quality Assessment of Milk: Property Characterisation and Identification"
+      ]
+    },
+    {
+      "name": "Creative Ai",
+      "count": 3,
+      "examples": [
+        "Building a community-led future for AI in film with Sundance Institute",
+        "How Higgsfield turns simple ideas into cinematic social videos",
+        "How animators and AI researchers made 'Dear Upstairs Neighbors'"
+      ]
+    },
+    {
+      "name": "Deep Learning",
+      "count": 3,
+      "examples": [
+        "AstRL: Analog and Mixed-Signal Circuit Synthesis with Deep Reinforcement Learning",
+        "Why Deep Jacobian Spectra Separate: Depth-Induced Scaling and Singular-Vector Alignment"
+      ]
+    },
+    {
+      "name": "Diffusion Models",
+      "count": 3,
+      "examples": [
+        "Continuous Diffusion Models Can Obey Formal Syntax",
+        "Formalizing the Sampling Design Space of Diffusion-Based Generative Models",
+        "SLA2: Sparse-Linear Attention with Learnable Routing and QAT"
+      ]
+    },
+    {
+      "name": "Medical Ai",
+      "count": 3,
+      "examples": [
+        "Free Lunch in Medical Image Foundation Model Pre-training via Randomized Synthesis and Disentanglement",
+        "Visible and Hyperspectral Imaging for Quality Assessment of Milk: Property Characterisation and Identification"
+      ]
+    },
+    {
+      "name": "Mixture-Of-Experts",
+      "count": 3,
+      "examples": [
+        "Multi-Head Attention as a Source of Catastrophic Forgetting in MoE Transformers",
+        "SD-MoE: Spectral Decomposition for Effective Expert Specialization"
+      ]
+    },
+    {
+      "name": "Multi-Agent",
+      "count": 3,
+      "examples": [
+        "Bench-MFG: A Benchmark Suite for Learning in Stationary Mean Field Games",
+        "Multi-Agent Model-Based Reinforcement Learning with Joint State-Action Learned Embeddings",
+        "Powering tax donations with AI powered personalized recommendations"
+      ]
+    },
+    {
+      "name": "Open Source",
+      "count": 3,
+      "examples": [
+        "AI Agent Lands PRs in Major OSS Projects",
+        "CURL's Daniel Stenberg: AI slop is DDoSing open source",
+        "Show HN: NadirClaw \u2013 Open-source LLM router with 10ms classification"
+      ]
+    },
+    {
+      "name": "Reasoning Models",
+      "count": 3,
+      "examples": [
+        "Consistency of Large Reasoning Models Under Multi-Turn Attacks",
+        "Evaluating Robustness of Reasoning Models on Parameterized Logical Problems",
+        "Information-theoretic analysis of world models in optimal reward maximizers"
+      ]
+    },
+    {
+      "name": "Research",
+      "count": 3,
+      "examples": [
+        "GPT-5 lowers the cost of cell-free protein synthesis",
+        "Gemini 3 Deep Think: Advancing science, research and engineering",
+        "Scaling social science research"
+      ]
+    },
+    {
+      "name": "Surveillance",
+      "count": 3,
+      "examples": [
+        "Let's talk about Ring, lost dogs, and the surveillance state",
+        "Meta reportedly wants to add face recognition to smart glasses while privacy advocates are distracted",
+        "Ring's adorable surveillance hellscape"
+      ]
+    },
+    {
+      "name": "Web Agents",
+      "count": 3,
+      "examples": [
+        "BrowseComp-$V^3$: A Visual, Vertical, and Verifiable Benchmark for Multimodal Browsing Agents",
+        "Scaling Web Agent Training through Automatic Data Generation and Fine-grained Evaluation",
+        "WebClipper: Efficient Evolution of Web Agents with Graph-based Trajectory Pruning"
+      ]
+    },
+    {
+      "name": "Ai Business",
+      "count": 2,
+      "examples": [
+        "Enduring AI Businesses",
+        "NatWest hails progress after \u00a31.2B spent on tech last year, but true AI"
+      ]
+    },
+    {
+      "name": "Ai Ethics",
+      "count": 2,
+      "examples": [
+        "Microsoft's framework for building AI systems responsibly",
+        "Our approach to age prediction"
+      ]
+    },
+    {
+      "name": "Ai Investment",
+      "count": 2,
+      "examples": [
+        "Have money, will travel: a16z's hunt for the next European unicorn",
+        "How Ricursive Intelligence raised $335M at a $4B valuation in 4 months"
+      ]
+    },
+    {
+      "name": "Chain-Of-Thought",
+      "count": 2,
+      "examples": [
+        "Constraint-Rectified Training for Efficient Chain-of-Thought",
+        "VI-CuRL: Stabilizing Verifier-Independent RL Reasoning via Confidence-Guided Variance Reduction"
+      ]
+    },
+    {
+      "name": "Federated Learning",
+      "count": 2,
+      "examples": [
+        "Efficient Personalized Federated PCA with Manifold Optimization for IoT Anomaly Detection",
+        "Fractional Order Federated Learning for Battery Electric Vehicle Energy Consumption Modeling"
+      ]
+    },
+    {
+      "name": "Fine-Tuning",
+      "count": 2,
+      "examples": [
+        "Intent-Driven Smart Manufacturing Integrating Knowledge Graphs and Large Language Models",
+        "Scaling Web Agent Training through Automatic Data Generation and Fine-grained Evaluation"
+      ]
+    },
+    {
+      "name": "Flow Matching",
+      "count": 2,
+      "examples": [
+        "Flow Matching from Viewpoint of Proximal Operators",
+        "Flow-Factory: A Unified Framework for Reinforcement Learning in Flow-Matching Models"
+      ]
+    },
+    {
+      "name": "Foundation Models",
+      "count": 2,
+      "examples": [
+        "Free Lunch in Medical Image Foundation Model Pre-training via Randomized Synthesis and Disentanglement"
+      ]
+    },
+    {
+      "name": "Graph Networks",
+      "count": 2,
+      "examples": [
+        "Coden: Efficient Temporal Graph Neural Networks for Continuous Prediction",
+        "RelBench v2: A Large-Scale Benchmark and Repository for Relational Data"
+      ]
+    },
+    {
+      "name": "Interactive Worlds",
+      "count": 2,
+      "examples": [
+        "Hear more about interactive world models in our latest podcast.",
+        "Project Genie: Experimenting with infinite, interactive worlds"
+      ]
+    },
+    {
+      "name": "Job Market",
+      "count": 2,
+      "examples": [
+        "How Indeed uses AI to help evolve the job search",
+        "How countries can end the capability overhang"
+      ]
+    },
+    {
+      "name": "Knowledge Graphs",
+      "count": 2,
+      "examples": [
+        "Evolving Beyond Snapshots: Harmonizing Structure and Sequence via Entity State Tuning for Temporal Knowledge Graph Forecasting",
+        "Intent-Driven Smart Manufacturing Integrating Knowledge Graphs and Large Language Models"
+      ]
+    },
+    {
+      "name": "Lora",
+      "count": 2,
+      "examples": [
+        "Stabilizing Native Low-Rank LLM Pretraining",
+        "The Appeal and Reality of Recycling LoRAs with Adaptive Merging"
+      ]
+    },
+    {
+      "name": "Meta",
+      "count": 2,
+      "examples": [
+        "Meta reportedly wants to add face recognition to smart glasses while privacy advocates are distracted",
+        "Regularized Meta-Learning for Improved Generalization"
+      ]
+    },
+    {
+      "name": "Privacy",
+      "count": 2,
+      "examples": [
+        "Meta reportedly wants to add face recognition to smart glasses while privacy advocates are distracted",
+        "Ring's adorable surveillance hellscape"
+      ]
+    },
+    {
+      "name": "Retrieval Augmentation",
+      "count": 2,
+      "examples": [
+        "Retrieval-Augmented Self-Taught Reasoning Model with Adaptive Chain-of-Thought for ASR Named Entity Correction"
+      ]
+    },
+    {
+      "name": "Search Ai",
+      "count": 2,
+      "examples": [
+        "Just ask anything: a seamless new Search experience",
+        "Personal Intelligence in AI Mode in Search: Help that's uniquely yours"
+      ]
+    },
+    {
+      "name": "Sora",
+      "count": 2,
+      "examples": [
+        "How Higgsfield turns simple ideas into cinematic social videos",
+        "The Sora feed philosophy"
+      ]
+    },
+    {
+      "name": "Talent Exodus",
+      "count": 2,
+      "examples": [
+        "What's behind the mass exodus at xAI?",
+        "Why top talent is walking away from OpenAI and xAI"
+      ]
+    },
+    {
+      "name": "Time Series",
+      "count": 2,
+      "examples": [
+        "TFT-ACB-XML: Decision-Level Integration of Customized Temporal Fusion Transformer and Attention-BiLSTM with XGBoost Meta-Learner for BTC Price Forecasting"
+      ]
+    },
+    {
+      "name": "Voice Ai",
+      "count": 2,
+      "examples": [
+        "ALS stole this musician's voice. AI let him sing again.",
+        "Longtime NPR host David Greene sues Google over NotebookLM voice"
+      ]
+    },
+    {
+      "name": "Wildlife Conservation",
+      "count": 2,
+      "examples": [
+        "AI-equipped drones study dolphins on the edge of extinction",
+        "Singapore develops Asia's first AI-based mobile app for shark and ray fin identification to combat illegal wildlife trade"
+      ]
+    },
+    {
+      "name": "Ai Art",
+      "count": 1,
+      "examples": [
+        "AI Is Killing Art"
+      ]
+    },
+    {
+      "name": "Ai Benchmarks",
+      "count": 1,
+      "examples": [
+        "Introducing Community Benchmarks on Kaggle"
+      ]
+    },
+    {
+      "name": "Ai Bots",
+      "count": 1,
+      "examples": [
+        "Increase of AI bots on the Internet sparks arms race"
+      ]
+    },
+    {
+      "name": "Ai Consciousness",
+      "count": 1,
+      "examples": [
+        "Does Anthropic believe its AI is conscious, or is that just what it wants Claude to think?"
+      ]
+    },
+    {
+      "name": "Ai Ipo",
+      "count": 1,
+      "examples": [
+        "Fractal Analytics' muted IPO debut signals persistent AI fears in India"
+      ]
+    },
+    {
+      "name": "Ai Pets",
+      "count": 1,
+      "examples": [
+        "I hate my AI pet with every fiber of my being"
+      ]
+    },
+    {
+      "name": "Ai Regulation",
+      "count": 1,
+      "examples": [
+        "The next chapter for AI in the EU"
+      ]
+    },
+    {
+      "name": "Ai Supply Chain",
+      "count": 1,
+      "examples": [
+        "Strengthening the U.S. AI supply chain through domestic manufacturing"
+      ]
+    },
+    {
+      "name": "Ai Video",
+      "count": 1,
+      "examples": [
+        "After spooking Hollywood, ByteDance will tweak safeguards on new AI model"
+      ]
+    },
+    {
+      "name": "Anthropic",
+      "count": 1,
+      "examples": [
+        "Anthropic and the Pentagon are reportedly arguing over Claude usage"
+      ]
+    },
+    {
+      "name": "Argumentation",
+      "count": 1,
+      "examples": [
+        "Constrained Assumption-Based Argumentation Frameworks"
+      ]
+    },
+    {
+      "name": "Bci",
+      "count": 1,
+      "examples": [
+        "Investing in Merge Labs"
+      ]
+    },
+    {
+      "name": "Biotechnology",
+      "count": 1,
+      "examples": [
+        "GPT-5 lowers the cost of cell-free protein synthesis"
+      ]
+    },
+    {
+      "name": "Bytedance",
+      "count": 1,
+      "examples": [
+        "After spooking Hollywood, ByteDance will tweak safeguards on new AI model"
+      ]
+    },
+    {
+      "name": "Catastrophic Forgetting",
+      "count": 1,
+      "examples": [
+        "Multi-Head Attention as a Source of Catastrophic Forgetting in MoE Transformers"
+      ]
+    },
+    {
+      "name": "Copyright",
+      "count": 1,
+      "examples": [
+        "Hollywood isn't happy about the new Seedance 2.0 video generator"
+      ]
+    },
+    {
+      "name": "Customer Support",
+      "count": 1,
+      "examples": [
+        "Airbnb says a third of its customer support is now handled by AI in the US and Canada"
+      ]
+    },
+    {
+      "name": "Domain Adaptation",
+      "count": 1,
+      "examples": [
+        "Exploring Accurate and Transparent Domain Adaptation in Predictive Healthcare via Concept-Grounded Orthogonal Inference"
+      ]
+    },
+    {
+      "name": "Financial Services",
+      "count": 1,
+      "examples": [
+        "How data and AI will transform contact centres for financial services"
+      ]
+    },
+    {
+      "name": "Fuzzy Systems",
+      "count": 1,
+      "examples": [
+        "Optimal Take-off under Fuzzy Clearances"
+      ]
+    },
+    {
+      "name": "Gaming",
+      "count": 1,
+      "examples": [
+        "AI can't make good video game worlds yet, and it might never be able to"
+      ]
+    },
+    {
+      "name": "Government/Military",
+      "count": 1,
+      "examples": [
+        "Bringing ChatGPT to GenAI.mil"
+      ]
+    },
+    {
+      "name": "Grok",
+      "count": 1,
+      "examples": [
+        "Is safety 'dead' at xAI?"
+      ]
+    },
+    {
+      "name": "Job Displacement",
+      "count": 1,
+      "examples": [
+        "I used AI to generate a song about AI taking developer jobs [video]"
+      ]
+    },
+    {
+      "name": "Localization",
+      "count": 1,
+      "examples": [
+        "Making AI work for everyone, everywhere: our approach to localization"
+      ]
+    },
+    {
+      "name": "Mamba",
+      "count": 1,
+      "examples": [
+        "A Theoretical Analysis of Mamba's Training Dynamics: Filtering Relevant Features for Generalization in State Space Models"
+      ]
+    },
+    {
+      "name": "Manufacturing",
+      "count": 1,
+      "examples": [
+        "Intent-Driven Smart Manufacturing Integrating Knowledge Graphs and Large Language Models"
+      ]
+    },
+    {
+      "name": "Model Cloning",
+      "count": 1,
+      "examples": [
+        "Attackers prompted Gemini over 100,000 times while trying to clone it, Google says"
+      ]
+    },
+    {
+      "name": "Notebooklm",
+      "count": 1,
+      "examples": [
+        "Longtime NPR host David Greene sues Google over NotebookLM voice"
+      ]
+    },
+    {
+      "name": "Nvidia",
+      "count": 1,
+      "examples": [
+        "Nvidia's $100 billion OpenAI deal has seemingly vanished"
+      ]
+    },
+    {
+      "name": "Personalization",
+      "count": 1,
+      "examples": [
+        "Synthetic Interaction Data for Scalable Personalization in Large Language Models"
+      ]
+    },
+    {
+      "name": "Rna Design",
+      "count": 1,
+      "examples": [
+        "Designing RNAs with Language Models"
+      ]
+    },
+    {
+      "name": "Robotics",
+      "count": 1,
+      "examples": [
+        "Energy-Aware Reinforcement Learning for Robotic Manipulation of Articulated Components in Infrastructure Operation and Maintenance"
+      ]
+    },
+    {
+      "name": "Vision Models",
+      "count": 1,
+      "examples": [
+        "On Robustness and Chain-of-Thought Consistency of RL-Finetuned VLMs"
+      ]
+    }
+  ]
+}

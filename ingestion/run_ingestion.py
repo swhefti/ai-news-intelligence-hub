@@ -31,6 +31,7 @@ from fetcher import fetch_all_feeds, Article
 from processor import chunk_articles, Chunk
 from embedder import get_embedder, EmbeddedChunk
 from storage import get_storage
+from taxonomy import classify_text
 
 # Set up logging
 logging.basicConfig(
@@ -134,7 +135,30 @@ def run_ingestion(
     if not articles:
         print("   ⚠ No new articles to process")
         return stats
-    
+
+    # -------------------------------------------------------------------------
+    # Step 3b: Classify articles with keyword taxonomy
+    # -------------------------------------------------------------------------
+    print("\n🏷️  Classifying articles with keyword taxonomy...")
+
+    keyword_counts = {}
+    for article in articles:
+        text = f"{article.title} {article.content}"
+        article.keywords = classify_text(text)
+        for kw in article.keywords:
+            keyword_counts[kw] = keyword_counts.get(kw, 0) + 1
+
+    total_keywords = sum(len(a.keywords) for a in articles)
+    articles_with_kw = sum(1 for a in articles if a.keywords)
+    print(f"   ✓ Classified {articles_with_kw}/{len(articles)} articles ({total_keywords} total keyword assignments)")
+
+    if keyword_counts:
+        top_keywords = sorted(keyword_counts.items(), key=lambda x: -x[1])[:10]
+        print(f"   Top keywords: {', '.join(f'{k} ({v})' for k, v in top_keywords)}")
+
+    stats["articles_classified"] = articles_with_kw
+    stats["keyword_assignments"] = total_keywords
+
     # -------------------------------------------------------------------------
     # Step 4: Store articles
     # -------------------------------------------------------------------------
@@ -202,6 +226,8 @@ def run_ingestion(
     print(f"\n📊 Summary:")
     print(f"   • Articles fetched: {stats['articles_fetched']}")
     print(f"   • New articles: {stats['articles_new']}")
+    print(f"   • Articles classified: {stats.get('articles_classified', 0)}")
+    print(f"   • Keyword assignments: {stats.get('keyword_assignments', 0)}")
     print(f"   • Chunks created: {stats['chunks_created']}")
     print(f"   • Chunks embedded: {stats['chunks_embedded']}")
     print(f"   • Chunks stored: {stats['chunks_stored']}")
