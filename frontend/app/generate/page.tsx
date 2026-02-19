@@ -50,7 +50,7 @@ function KeywordChip({
     <button
       type="button"
       onClick={onClick}
-      className="text-xs font-medium px-3 py-1.5 rounded-full border transition-all duration-150 cursor-pointer"
+      className="text-[11px] font-medium px-2 py-0.5 rounded-full border transition-all duration-150 cursor-pointer leading-snug"
       style={
         isSelected
           ? {
@@ -84,46 +84,36 @@ function KeywordFilter({
   onClearAll: () => void;
 }) {
   return (
-    <section>
-      <div className="flex items-center justify-between mb-1">
-        <label className="text-sm font-medium">
-          Filter by topics{" "}
-          <span className="font-normal text-muted-foreground">(optional)</span>
-        </label>
-        {selectedKeywords.length > 0 && (
+    <section className="space-y-3">
+      {Object.entries(KEYWORD_CATEGORIES).map(([category, data]) => (
+        <div key={category} className="text-center">
+          <p className="text-[10px] text-muted-foreground mb-1.5 font-medium uppercase tracking-wider">
+            {category}
+          </p>
+          <div className="flex flex-wrap gap-1.5 justify-center">
+            {data.keywords.map((kw) => (
+              <KeywordChip
+                key={kw}
+                keyword={kw}
+                isSelected={selectedKeywords.includes(kw)}
+                onClick={() => onToggle(kw)}
+                color={data.color}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+      {selectedKeywords.length > 0 && (
+        <div className="text-center">
           <button
             type="button"
             onClick={onClearAll}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="text-[11px] text-muted-foreground hover:text-foreground transition-colors"
           >
             Clear all
           </button>
-        )}
-      </div>
-      <p className="text-xs text-muted-foreground mb-4">
-        Leave all unselected to include everything
-      </p>
-
-      <div className="space-y-4">
-        {Object.entries(KEYWORD_CATEGORIES).map(([category, data]) => (
-          <div key={category}>
-            <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">
-              {category}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {data.keywords.map((kw) => (
-                <KeywordChip
-                  key={kw}
-                  keyword={kw}
-                  isSelected={selectedKeywords.includes(kw)}
-                  onClick={() => onToggle(kw)}
-                  color={data.color}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+        </div>
+      )}
     </section>
   );
 }
@@ -146,40 +136,37 @@ function TimeSlider({
   const dayLabel = DAY_STEPS[displayValue];
 
   return (
-    <section>
-      <label className="text-sm font-medium">Time range</label>
-      <div className="flex items-center gap-4 mt-2">
-        <span className="text-sm text-muted-foreground whitespace-nowrap min-w-[80px] text-right">
-          Last{" "}
-          <span className="font-medium text-foreground">
-            {dayLabel} day{dayLabel !== 1 ? "s" : ""}
-          </span>
+    <section className="flex flex-col items-center">
+      <span className="text-xs text-muted-foreground mb-2">
+        Last{" "}
+        <span className="font-medium text-foreground">
+          {dayLabel} day{dayLabel !== 1 ? "s" : ""}
         </span>
-        <input
-          type="range"
-          min={0}
-          max={DAY_STEPS.length - 1}
-          step={1}
-          value={displayValue}
-          onChange={(e) => onDrag(parseInt(e.target.value, 10))}
-          onMouseUp={onCommit}
-          onTouchEnd={onCommit}
-          className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-border
-            [&::-webkit-slider-thumb]:appearance-none
-            [&::-webkit-slider-thumb]:w-4
-            [&::-webkit-slider-thumb]:h-4
-            [&::-webkit-slider-thumb]:rounded-full
-            [&::-webkit-slider-thumb]:bg-foreground
-            [&::-webkit-slider-thumb]:shadow-sm
-            [&::-webkit-slider-thumb]:cursor-pointer
-            [&::-moz-range-thumb]:w-4
-            [&::-moz-range-thumb]:h-4
-            [&::-moz-range-thumb]:rounded-full
-            [&::-moz-range-thumb]:bg-foreground
-            [&::-moz-range-thumb]:border-0
-            [&::-moz-range-thumb]:cursor-pointer"
-        />
-      </div>
+      </span>
+      <input
+        type="range"
+        min={0}
+        max={DAY_STEPS.length - 1}
+        step={1}
+        value={displayValue}
+        onChange={(e) => onDrag(parseInt(e.target.value, 10))}
+        onMouseUp={onCommit}
+        onTouchEnd={onCommit}
+        className="w-48 h-1 rounded-full appearance-none cursor-pointer bg-border
+          [&::-webkit-slider-thumb]:appearance-none
+          [&::-webkit-slider-thumb]:w-3.5
+          [&::-webkit-slider-thumb]:h-3.5
+          [&::-webkit-slider-thumb]:rounded-full
+          [&::-webkit-slider-thumb]:bg-foreground
+          [&::-webkit-slider-thumb]:shadow-sm
+          [&::-webkit-slider-thumb]:cursor-pointer
+          [&::-moz-range-thumb]:w-3.5
+          [&::-moz-range-thumb]:h-3.5
+          [&::-moz-range-thumb]:rounded-full
+          [&::-moz-range-thumb]:bg-foreground
+          [&::-moz-range-thumb]:border-0
+          [&::-moz-range-thumb]:cursor-pointer"
+      />
     </section>
   );
 }
@@ -200,15 +187,17 @@ function SegmentedToggle<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div className="flex-1">
-      <label className="text-sm font-medium block mb-2">{label}</label>
-      <div className="flex bg-muted rounded-lg p-0.5">
+    <div>
+      <label className="text-[11px] text-muted-foreground block mb-1 text-center">
+        {label}
+      </label>
+      <div className="flex bg-muted rounded-md p-0.5">
         {options.map((opt) => (
           <button
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`flex-1 text-sm py-1.5 px-3 rounded-md transition-all duration-150 font-medium ${
+            className={`text-xs py-1 px-3 rounded transition-all duration-150 font-medium ${
               value === opt.value
                 ? "bg-background text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
@@ -440,7 +429,7 @@ export default function GeneratePage() {
           />
 
           {/* Toggle row */}
-          <div className="flex gap-4">
+          <div className="flex gap-4 justify-center">
             <SegmentedToggle
               label="Detail level"
               options={[
