@@ -50,7 +50,7 @@ function KeywordChip({
     <button
       type="button"
       onClick={onClick}
-      className="text-[9px] font-medium px-2 py-0.5 rounded-full border transition-all duration-150 cursor-pointer leading-snug"
+      className="text-[11px] font-medium px-2.5 py-1 rounded-full border transition-all duration-150 cursor-pointer"
       style={
         isSelected
           ? {
@@ -83,36 +83,32 @@ function KeywordFilter({
   onToggle: (kw: string) => void;
   onClearAll: () => void;
 }) {
-  const categories = Object.entries(KEYWORD_CATEGORIES);
-
   return (
-    <section>
-      <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-        {categories.map(([category, data]) => (
-          <div key={category} className="text-center">
-            <p className="text-[9px] text-muted-foreground mb-1 font-medium uppercase tracking-wider">
-              {category}
-            </p>
-            <div className="flex flex-wrap gap-[5px] justify-center">
-              {data.keywords.map((kw) => (
-                <KeywordChip
-                  key={kw}
-                  keyword={kw}
-                  isSelected={selectedKeywords.includes(kw)}
-                  onClick={() => onToggle(kw)}
-                  color={data.color}
-                />
-              ))}
-            </div>
+    <section className="space-y-3">
+      {Object.entries(KEYWORD_CATEGORIES).map(([category, data]) => (
+        <div key={category} className="text-center">
+          <p className="text-[10px] text-muted-foreground mb-1.5 font-medium uppercase tracking-wider">
+            {category}
+          </p>
+          <div className="flex flex-wrap gap-1.5 justify-center">
+            {data.keywords.map((kw) => (
+              <KeywordChip
+                key={kw}
+                keyword={kw}
+                isSelected={selectedKeywords.includes(kw)}
+                onClick={() => onToggle(kw)}
+                color={data.color}
+              />
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
       {selectedKeywords.length > 0 && (
         <div className="text-center mt-2">
           <button
             type="button"
             onClick={onClearAll}
-            className="text-[9px] text-muted-foreground hover:text-foreground transition-colors"
+            className="text-[11px] text-muted-foreground hover:text-foreground transition-colors"
           >
             Clear all
           </button>
@@ -141,7 +137,7 @@ function TimeSlider({
 
   return (
     <section className="flex flex-col items-center">
-      <span className="text-[9px] text-muted-foreground mb-1.5">
+      <span className="text-xs text-muted-foreground mb-2">
         Last{" "}
         <span className="font-medium text-foreground">
           {dayLabel} day{dayLabel !== 1 ? "s" : ""}
@@ -192,16 +188,16 @@ function SegmentedToggle<T extends string>({
 }) {
   return (
     <div>
-      <label className="text-[9px] text-muted-foreground block mb-1 text-center">
+      <label className="text-[11px] text-muted-foreground block mb-1 text-center">
         {label}
       </label>
-      <div className="flex bg-muted rounded-md p-0.5">
+      <div className="flex bg-muted rounded-lg p-0.5">
         {options.map((opt) => (
           <button
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`text-[9px] py-0.5 px-2.5 rounded transition-all duration-150 font-medium ${
+            className={`text-xs py-1 px-4 rounded-md transition-all duration-150 font-medium ${
               value === opt.value
                 ? "bg-background text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
