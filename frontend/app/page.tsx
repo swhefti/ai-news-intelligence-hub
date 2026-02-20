@@ -96,7 +96,7 @@ export default function HomePage() {
           width={625}
           height={265}
           priority
-          style={{ marginBottom: "1.5rem" }}
+          style={{ marginBottom: "25px" }}
         />
 
         {/* Title */}

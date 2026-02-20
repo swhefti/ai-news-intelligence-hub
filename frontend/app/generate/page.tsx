@@ -173,6 +173,8 @@ const cellStyle: React.CSSProperties = {
   borderRight: "1px solid var(--border)",
   borderBottom: "1px solid var(--border)",
   verticalAlign: "middle",
+  textAlign: "center",
+  whiteSpace: "nowrap",
 };
 
 const lastCellStyle: React.CSSProperties = {
@@ -205,6 +207,7 @@ function KeywordFilter({
               letterSpacing: "0.08em",
               color: "var(--muted-foreground)",
               marginBottom: "0.35rem",
+              textAlign: "center",
             }}>
               {category}
             </p>
@@ -213,7 +216,7 @@ function KeywordFilter({
               borderCollapse: "collapse",
               border: "1px solid var(--border)",
               borderRadius: "4px",
-              tableLayout: "fixed",
+              tableLayout: "auto",
             }}>
               <tbody>
                 <tr>
@@ -518,16 +521,18 @@ function HistoryList({
                 border: "1px solid var(--border)",
                 borderRadius: "4px",
                 cursor: "pointer",
-                transition: "border-color 0.15s ease, background 0.15s ease",
+                background: "white",
+                boxShadow: "2px 2px 0px var(--border)",
+                transition: "border-color 0.15s ease, box-shadow 0.15s ease",
               }}
               onClick={() => onSelect(b)}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.borderColor = "var(--copper)";
-                (e.currentTarget as HTMLElement).style.background = "rgba(181, 122, 88, 0.04)";
+                (e.currentTarget as HTMLElement).style.boxShadow = "3px 3px 0px var(--copper)";
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                (e.currentTarget as HTMLElement).style.background = "transparent";
+                (e.currentTarget as HTMLElement).style.boxShadow = "2px 2px 0px var(--border)";
               }}
             >
               <div style={{ flex: 1, minWidth: 0 }}>

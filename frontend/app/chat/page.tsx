@@ -244,10 +244,10 @@ function AskSection() {
                       className="icon-btn"
                       onClick={() => handleFollowUp(fq)}
                       style={{
-                        fontSize: "0.78rem",
+                        fontSize: "0.9rem",
                         color: "var(--muted-foreground)",
                         fontStyle: "italic",
-                        padding: "0.3rem 0.65rem",
+                        padding: "0.4rem 0.8rem",
                         border: "1px solid var(--border)",
                         borderRadius: "4px",
                         transition:
