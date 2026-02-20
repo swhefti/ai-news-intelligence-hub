@@ -159,8 +159,26 @@ function KeywordCheckbox({
 }
 
 /* ------------------------------------------------------------------ */
-/* Keyword Filter Section                                              */
+/* Keyword Filter Section (table layout)                               */
 /* ------------------------------------------------------------------ */
+
+/** Split an array into 2 roughly-equal rows */
+function splitIntoRows<T>(items: T[]): [T[], T[]] {
+  const mid = Math.ceil(items.length / 2);
+  return [items.slice(0, mid), items.slice(mid)];
+}
+
+const cellStyle: React.CSSProperties = {
+  padding: "0.35rem 0.6rem",
+  borderRight: "1px solid var(--border)",
+  borderBottom: "1px solid var(--border)",
+  verticalAlign: "middle",
+};
+
+const lastCellStyle: React.CSSProperties = {
+  ...cellStyle,
+  borderRight: "none",
+};
 
 function KeywordFilter({
   selectedKeywords,
@@ -172,35 +190,71 @@ function KeywordFilter({
   onClearAll: () => void;
 }) {
   return (
-    <section style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-      {Object.entries(KEYWORD_CATEGORIES).map(([category, data]) => (
-        <div key={category}>
-          <p style={{
-            fontSize: "0.65rem",
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 800,
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-            color: "var(--muted-foreground)",
-            marginBottom: "0.4rem",
-            textAlign: "center",
-          }}>
-            {category}
-          </p>
-          <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center">
-            {data.keywords.map((kw) => (
-              <KeywordCheckbox
-                key={kw}
-                keyword={kw}
-                isSelected={selectedKeywords.includes(kw)}
-                onClick={() => onToggle(kw)}
-              />
-            ))}
+    <section style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      {Object.entries(KEYWORD_CATEGORIES).map(([category, data]) => {
+        const [row1, row2] = splitIntoRows(data.keywords);
+        const colCount = row1.length;
+
+        return (
+          <div key={category}>
+            <p style={{
+              fontSize: "0.65rem",
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              color: "var(--muted-foreground)",
+              marginBottom: "0.35rem",
+            }}>
+              {category}
+            </p>
+            <table style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              border: "1px solid var(--border)",
+              borderRadius: "4px",
+              tableLayout: "fixed",
+            }}>
+              <tbody>
+                <tr>
+                  {row1.map((kw, i) => (
+                    <td key={kw} style={i === colCount - 1 ? lastCellStyle : cellStyle}>
+                      <KeywordCheckbox
+                        keyword={kw}
+                        isSelected={selectedKeywords.includes(kw)}
+                        onClick={() => onToggle(kw)}
+                      />
+                    </td>
+                  ))}
+                </tr>
+                <tr>
+                  {Array.from({ length: colCount }).map((_, i) => {
+                    const kw = row2[i];
+                    const isLast = i === colCount - 1;
+                    const style: React.CSSProperties = {
+                      ...(isLast ? lastCellStyle : cellStyle),
+                      borderBottom: "none",
+                    };
+                    return (
+                      <td key={kw ?? `empty-${i}`} style={style}>
+                        {kw ? (
+                          <KeywordCheckbox
+                            keyword={kw}
+                            isSelected={selectedKeywords.includes(kw)}
+                            onClick={() => onToggle(kw)}
+                          />
+                        ) : null}
+                      </td>
+                    );
+                  })}
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
-      ))}
+        );
+      })}
       {selectedKeywords.length > 0 && (
-        <div className="text-center" style={{ marginTop: "0.5rem" }}>
+        <div className="text-center">
           <button
             type="button"
             className="icon-btn"
@@ -219,7 +273,7 @@ function KeywordFilter({
 /* Time Slider                                                         */
 /* ------------------------------------------------------------------ */
 
-const DAY_STEPS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 21, 30];
+const DAY_STEPS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
 function TimeSlider({
   displayValue,
