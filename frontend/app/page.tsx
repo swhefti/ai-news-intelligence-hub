@@ -93,10 +93,10 @@ export default function HomePage() {
         <Image
           src="/ai-news-hero.png"
           alt="AI News Intelligence Hub"
-          width={750}
-          height={222}
+          width={685}
+          height={203}
           priority
-          style={{ marginBottom: "25px" }}
+          style={{ marginBottom: "0px" }}
         />
 
         {/* Title */}
