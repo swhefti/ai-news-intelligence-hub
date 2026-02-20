@@ -52,7 +52,9 @@ function FeatureCard({
     <Link
       href={href}
       className="bp-card group"
-      style={{ display: "block", textDecoration: "none", transition: "transform 0.15s ease, box-shadow 0.15s ease" }}
+      style={{ display: "block", textDecoration: "none", transition: "transform 0.15s ease, box-shadow 0.15s ease", cursor: "pointer" }}
+      onMouseEnter={(e) => { e.currentTarget.style.transform = "translate(-2px, -2px)"; e.currentTarget.style.boxShadow = "6px 6px 0px var(--copper)"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "4px 4px 0px var(--copper)"; }}
     >
       <div style={{ color: "var(--copper)", marginBottom: "0.75rem" }}>
         {icon}
@@ -83,13 +85,13 @@ export default function HomePage() {
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <NavHeader variant="home" />
+      <NavHeader variant="home" hideSourcesLink />
 
       <main className="flex-1 flex flex-col items-center justify-center px-6" style={{ marginTop: "-4rem" }}>
         {/* Title */}
         <h1 style={{
           fontFamily: "'Georgia', serif",
-          fontSize: "clamp(2rem, 5vw, 3.2rem)",
+          fontSize: "clamp(2.5rem, 6vw, 4rem)",
           fontWeight: 400,
           fontStyle: "italic",
           textAlign: "center",
@@ -106,7 +108,7 @@ export default function HomePage() {
           maxWidth: "38rem",
           textAlign: "center",
           color: "var(--muted-foreground)",
-          fontSize: "1rem",
+          fontSize: "1.15rem",
           lineHeight: 1.7,
         }}>
           A retrieval-augmented record of the global AI landscape. We ingest

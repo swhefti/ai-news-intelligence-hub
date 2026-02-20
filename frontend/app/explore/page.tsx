@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import Link from "next/link";
 import cloud from "d3-cloud";
 import NavHeader from "@/components/NavHeader";
 import {
@@ -737,18 +736,6 @@ export default function ExplorePage() {
         )}
       </main>
 
-      {/* Footer nav */}
-      <footer style={{ padding: "1rem 1.5rem" }}>
-        <div className="max-w-5xl mx-auto flex items-center justify-center gap-6" style={{ fontSize: "0.85rem", color: "var(--muted-foreground)", fontStyle: "italic" }}>
-          <span style={{ color: "var(--ink)", fontWeight: 700 }}>Explore</span>
-          <span style={{ color: "var(--border)" }}>|</span>
-          <Link href="/chat" style={{ textDecoration: "none" }}>Chat</Link>
-          <span style={{ color: "var(--border)" }}>|</span>
-          <Link href="/generate" style={{ textDecoration: "none" }}>Generate</Link>
-          <span style={{ color: "var(--border)" }}>|</span>
-          <Link href="/dashboard" style={{ textDecoration: "none", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", fontStyle: "normal", textTransform: "uppercase", letterSpacing: "0.05em" }}>Sources</Link>
-        </div>
-      </footer>
 
       {showInfoModal && data && (
         <InfoModal

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import NavHeader from "@/components/NavHeader";
@@ -742,18 +741,6 @@ export default function GeneratePage() {
         />
       )}
 
-      {/* Footer nav */}
-      <footer style={{ padding: "1rem 1.5rem" }}>
-        <div className="max-w-3xl mx-auto flex items-center justify-center gap-6" style={{ fontSize: "0.85rem", color: "var(--muted-foreground)", fontStyle: "italic" }}>
-          <Link href="/explore" style={{ textDecoration: "none" }}>Explore</Link>
-          <span style={{ color: "var(--border)" }}>|</span>
-          <Link href="/chat" style={{ textDecoration: "none" }}>Chat</Link>
-          <span style={{ color: "var(--border)" }}>|</span>
-          <span style={{ color: "var(--ink)", fontWeight: 700 }}>Generate</span>
-          <span style={{ color: "var(--border)" }}>|</span>
-          <Link href="/dashboard" style={{ textDecoration: "none", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", fontStyle: "normal", textTransform: "uppercase", letterSpacing: "0.05em" }}>Sources</Link>
-        </div>
-      </footer>
     </div>
   );
 }

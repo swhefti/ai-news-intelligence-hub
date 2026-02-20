@@ -9,7 +9,7 @@
   --paper: #F4F2EE;
   --ink: #0D2B2B;
   --copper: #B57A58;
-  --line: rgba(13, 43, 43, 0.1);
+  --line: rgba(13, 43, 43, 0.05);
   --shadow: 4px 4px 0px var(--copper);
 
   /* Map existing tokens → Blueprint palette */
