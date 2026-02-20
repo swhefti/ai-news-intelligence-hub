@@ -232,12 +232,26 @@ def run_ingestion(
     print(f"   • Chunks embedded: {stats['chunks_embedded']}")
     print(f"   • Chunks stored: {stats['chunks_stored']}")
     print(f"   • Duration: {duration:.1f} seconds")
-    
+
     if stats["errors"]:
         print(f"\n⚠️ Errors encountered:")
         for error in stats["errors"]:
             print(f"   • {error}")
-    
+
+    # -------------------------------------------------------------------------
+    # Monitoring: Warn if chunks-to-articles ratio is too low
+    # -------------------------------------------------------------------------
+    if stats["articles_new"] > 0:
+        ratio = stats["chunks_created"] / stats["articles_new"]
+        if ratio < 0.5:
+            print(f"\n🚨 WARNING: Very low chunks-to-articles ratio ({ratio:.2f})")
+            print(f"   {stats['articles_new']} articles produced only {stats['chunks_created']} chunks")
+            print(f"   Most RSS feeds may not be providing full content.")
+            print(f"   → Make sure full-content fetching is enabled (default)")
+        elif ratio < 1.0:
+            print(f"\n⚠️ Low chunks-to-articles ratio ({ratio:.2f})")
+            print(f"   Some articles may have very short content.")
+
     return stats
 
 
@@ -298,29 +312,32 @@ def main():
     )
     
     parser.add_argument(
-        "--full-content",
+        "--no-full-content",
         action="store_true",
-        help="Fetch full article content from URLs (slower but more complete)"
+        help="Skip fetching full content from URLs (faster, RSS-only)"
     )
-    
+
     parser.add_argument(
         "--stats",
         action="store_true",
         help="Show database statistics and exit"
     )
-    
+
     args = parser.parse_args()
-    
+
     # Show stats and exit if requested
     if args.stats:
         show_stats(use_local=args.local)
         return
-    
+
     # Parse filter options
     sources = args.sources.split(",") if args.sources else None
     categories = args.categories.split(",") if args.categories else None
     priorities = args.priorities.split(",") if args.priorities else None
-    
+
+    # Full content is ON by default; --no-full-content disables it
+    fetch_full = not args.no_full_content
+
     # Run ingestion
     stats = run_ingestion(
         use_local=args.local,
@@ -328,7 +345,7 @@ def main():
         source_names=sources,
         categories=categories,
         priorities=priorities,
-        fetch_full=args.full_content,
+        fetch_full=fetch_full,
     )
     
     # Return appropriate exit code

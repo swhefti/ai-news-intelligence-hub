@@ -206,19 +206,38 @@ def chunk_text(
 def chunk_article(article) -> list[Chunk]:
     """
     Chunk an Article object into Chunk objects.
-    
+
+    Ensures at least one chunk is created for any article with content,
+    even if the content is very short. Short articles (< min_chunk_size)
+    get a single chunk composed of title + whatever content is available.
+
     Args:
         article: Article object with content and metadata
-    
+
     Returns:
         List of Chunk objects
     """
+    content = article.content or ""
+
+    # Fallback chain for content
+    if len(content) < 50:
+        content = getattr(article, 'summary', '') or ""
+    if len(content) < 50:
+        # Last resort: just the title — still create a chunk so the article
+        # is searchable by title at minimum
+        content = article.title
+
     # Create enhanced text with title for better context
-    enhanced_text = f"# {article.title}\n\n{article.content}"
-    
+    enhanced_text = f"# {article.title}\n\n{content}"
+
     # Chunk the text
     raw_chunks = chunk_text(enhanced_text)
-    
+
+    # If chunking returned nothing (content too short), force a single chunk
+    if not raw_chunks and len(enhanced_text.strip()) > 0:
+        raw_chunks = [(enhanced_text.strip(), 0, len(enhanced_text))]
+        logger.info(f"  Forced single chunk for short article: {article.title[:60]}")
+
     # Convert to Chunk objects
     chunks = []
     for i, (text, start, end) in enumerate(raw_chunks):
@@ -236,28 +255,46 @@ def chunk_article(article) -> list[Chunk]:
             published_at=article.published_at.isoformat() if article.published_at else None,
         )
         chunks.append(chunk)
-    
+
     return chunks
 
 
 def chunk_articles(articles: list) -> list[Chunk]:
     """
     Chunk multiple articles.
-    
+
     Args:
         articles: List of Article objects
-    
+
     Returns:
         List of all Chunk objects
     """
     all_chunks = []
-    
+    zero_chunk_articles = []
+
     for article in articles:
+        content_len = len(article.content or "")
         chunks = chunk_article(article)
         all_chunks.extend(chunks)
-        logger.debug(f"Chunked article '{article.title[:50]}' into {len(chunks)} chunks")
-    
+
+        if len(chunks) == 0:
+            zero_chunk_articles.append(
+                f"  [{article.source_name}] {article.title[:60]} (content: {content_len} chars)"
+            )
+
+        logger.debug(
+            f"Chunked '{article.title[:50]}' → {len(chunks)} chunks "
+            f"(content: {content_len} chars)"
+        )
+
     logger.info(f"Created {len(all_chunks)} chunks from {len(articles)} articles")
+
+    if zero_chunk_articles:
+        logger.warning(
+            f"⚠ {len(zero_chunk_articles)} articles produced 0 chunks:\n"
+            + "\n".join(zero_chunk_articles)
+        )
+
     return all_chunks
 
 

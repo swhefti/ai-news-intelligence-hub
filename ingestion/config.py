@@ -47,7 +47,7 @@ RSS_FEEDS = [
     },
     {
         "name": "Microsoft AI Blog",
-        "url": "https://blogs.microsoft.com/ai/feed/",
+        "url": "https://techcommunity.microsoft.com/t5/s/gxcuf89792/rss/board?board.id=AIPlatformBlog",
         "category": "ai_company",
         "priority": "medium"
     },
