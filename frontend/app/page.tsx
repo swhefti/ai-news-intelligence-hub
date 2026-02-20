@@ -56,13 +56,13 @@ function FeatureCard({
       onMouseEnter={(e) => { e.currentTarget.style.transform = "translate(-2px, -2px)"; e.currentTarget.style.boxShadow = "6px 6px 0px var(--copper)"; }}
       onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "4px 4px 0px var(--copper)"; }}
     >
-      <div style={{ color: "var(--copper)", marginBottom: "0.75rem" }}>
+      <div style={{ color: "var(--copper)", marginBottom: "0.75rem", display: "flex", justifyContent: "center" }}>
         {icon}
       </div>
-      <h2 style={{ fontSize: "1.15rem", fontWeight: 700, fontFamily: "'Georgia', serif", marginBottom: "0.3rem" }}>
+      <h2 style={{ fontSize: "1.15rem", fontWeight: 700, fontFamily: "'Georgia', serif", marginBottom: "0.3rem", textAlign: "center" }}>
         {title}
       </h2>
-      <p style={{ fontSize: "0.875rem", color: "var(--muted-foreground)", lineHeight: 1.6 }}>
+      <p style={{ fontSize: "0.875rem", color: "var(--muted-foreground)", lineHeight: 1.6, textAlign: "center" }}>
         {description}
       </p>
     </Link>
@@ -99,13 +99,13 @@ export default function HomePage() {
           color: "var(--ink)",
           lineHeight: 1.2,
         }}>
-          The AI News Intelligence Review
+          The AI News Intelligence Hub
         </h1>
 
         {/* Subtitle */}
         <p style={{
           marginTop: "1.5rem",
-          maxWidth: "38rem",
+          maxWidth: "52rem",
           textAlign: "center",
           color: "var(--muted-foreground)",
           fontSize: "1.15rem",
@@ -118,12 +118,21 @@ export default function HomePage() {
 
         {/* Article count */}
         {articleCount !== null && (
-          <p className="mono-label" style={{
-            marginTop: "1rem",
-            fontSize: "0.8rem",
-          }}>
-            Currently {articleCount.toLocaleString()} articles indexed
-          </p>
+          <Link
+            href="/dashboard"
+            className="mono-label"
+            style={{
+              marginTop: "1rem",
+              fontSize: "0.8rem",
+              textDecoration: "none",
+              transition: "opacity 0.15s ease",
+              display: "inline-block",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.7"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; }}
+          >
+            Currently {articleCount.toLocaleString()} articles indexed →
+          </Link>
         )}
 
         {/* Feature cards */}

@@ -28,7 +28,7 @@ export default function ChatPage() {
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <NavHeader currentPage="chat" />
 
-      <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8">
+      <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8 flex flex-col">
         <AskSection />
       </main>
     </div>
@@ -74,8 +74,10 @@ function AskSection() {
     }
   }
 
+  const hasContent = loading || result || error;
+
   return (
-    <>
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: hasContent ? "flex-start" : "center" }}>
       {/* Search form */}
       <form onSubmit={handleSubmit} className="flex gap-3">
         <input
@@ -116,11 +118,10 @@ function AskSection() {
         </div>
       )}
 
-      {/* Empty state */}
+      {/* Empty state — subtle suggestions */}
       {!loading && !result && !error && (
-        <div className="mt-16 text-center" style={{ color: "var(--muted-foreground)" }}>
-          <p style={{ fontSize: "1.1rem", fontStyle: "italic" }}>Ask a question to get started</p>
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
+        <div className="text-center" style={{ color: "var(--muted-foreground)", marginTop: "1.5rem" }}>
+          <div className="flex flex-wrap justify-center gap-2">
             {[
               "What are the latest AI safety developments?",
               "What has Anthropic announced recently?",
@@ -129,8 +130,19 @@ function AskSection() {
               <button
                 key={suggestion}
                 type="button"
-                className="chip-btn"
+                className="icon-btn"
                 onClick={() => setQuestion(suggestion)}
+                style={{
+                  fontSize: "0.78rem",
+                  color: "var(--muted-foreground)",
+                  fontStyle: "italic",
+                  padding: "0.3rem 0.65rem",
+                  border: "1px solid var(--border)",
+                  borderRadius: "4px",
+                  transition: "border-color 0.15s ease, color 0.15s ease",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--copper)"; e.currentTarget.style.color = "var(--copper)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--muted-foreground)"; }}
               >
                 {suggestion}
               </button>
@@ -138,7 +150,7 @@ function AskSection() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

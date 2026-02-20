@@ -17,10 +17,10 @@ interface NavHeaderProps {
 /* ------------------------------------------------------------------ */
 
 const navLinkStyle: React.CSSProperties = {
-  fontSize: "0.75rem",
+  fontSize: "0.85rem",
   fontFamily: "'JetBrains Mono', monospace",
   fontWeight: 500,
-  padding: "0.3rem 0.6rem",
+  padding: "0.4rem 0.75rem",
   color: "var(--muted-foreground)",
   textDecoration: "none",
   textTransform: "uppercase",
@@ -53,7 +53,7 @@ export default function NavHeader({
             color: "var(--ink)",
           }}
         >
-          The AI News Intelligence Review
+          The AI News Intelligence Hub
         </Link>
 
         {/* Navigation — centered, all JetBrains Mono uppercase */}

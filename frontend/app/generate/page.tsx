@@ -116,10 +116,10 @@ function DeleteConfirmDialog({
 }
 
 /* ------------------------------------------------------------------ */
-/* Keyword Chip                                                        */
+/* Keyword Checkbox                                                    */
 /* ------------------------------------------------------------------ */
 
-function KeywordChip({
+function KeywordCheckbox({
   keyword,
   isSelected,
   onClick,
@@ -127,16 +127,34 @@ function KeywordChip({
   keyword: string;
   isSelected: boolean;
   onClick: () => void;
-  color: string;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`chip-btn ${isSelected ? "active" : ""}`}
+    <label
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        cursor: "pointer",
+        fontSize: "0.8rem",
+        color: isSelected ? "var(--ink)" : "var(--muted-foreground)",
+        fontWeight: isSelected ? 600 : 400,
+        transition: "color 0.15s ease",
+        whiteSpace: "nowrap",
+      }}
     >
+      <input
+        type="checkbox"
+        checked={isSelected}
+        onChange={onClick}
+        style={{
+          accentColor: "var(--copper)",
+          width: "0.85rem",
+          height: "0.85rem",
+          cursor: "pointer",
+        }}
+      />
       {keyword}
-    </button>
+    </label>
   );
 }
 
@@ -156,7 +174,7 @@ function KeywordFilter({
   return (
     <section style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
       {Object.entries(KEYWORD_CATEGORIES).map(([category, data]) => (
-        <div key={category} className="text-center">
+        <div key={category}>
           <p style={{
             fontSize: "0.65rem",
             fontFamily: "'Inter', sans-serif",
@@ -165,17 +183,17 @@ function KeywordFilter({
             letterSpacing: "0.08em",
             color: "var(--muted-foreground)",
             marginBottom: "0.4rem",
+            textAlign: "center",
           }}>
             {category}
           </p>
-          <div className="flex flex-wrap gap-1.5 justify-center">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center">
             {data.keywords.map((kw) => (
-              <KeywordChip
+              <KeywordCheckbox
                 key={kw}
                 keyword={kw}
                 isSelected={selectedKeywords.includes(kw)}
                 onClick={() => onToggle(kw)}
-                color={data.color}
               />
             ))}
           </div>

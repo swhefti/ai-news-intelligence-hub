@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "The AI News Intelligence Review",
+  title: "The AI News Intelligence Hub",
   description: "A retrieval-augmented record of the global AI landscape",
 };
 
