@@ -60,32 +60,23 @@ export default function ChatPage() {
   const [activeTab, setActiveTab] = useState<"ask" | "briefing">("ask");
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <NavHeader currentPage="chat" />
 
-      {/* Main content */}
       <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8">
         {/* Tabs */}
-        <div className="flex gap-1 p-1 bg-muted rounded-lg mb-6 w-fit">
+        <div className="flex gap-1" style={{ padding: "0.25rem", background: "var(--muted)", borderRadius: "6px", width: "fit-content", marginBottom: "1.5rem" }}>
           <button
             type="button"
+            className={`tab-btn ${activeTab === "ask" ? "active" : ""}`}
             onClick={() => setActiveTab("ask")}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-              activeTab === "ask"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
           >
             Ask a Question
           </button>
           <button
             type="button"
+            className={`tab-btn ${activeTab === "briefing" ? "active" : ""}`}
             onClick={() => setActiveTab("briefing")}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-              activeTab === "briefing"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
           >
             Generate Briefing
           </button>
@@ -145,37 +136,33 @@ function AskTab() {
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="e.g. What are the latest developments in AI safety?"
-          className="flex-1 px-4 py-2.5 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           disabled={loading}
+          style={{ flex: 1 }}
         />
-        <button
-          type="submit"
-          disabled={loading || !question.trim()}
-          className="px-5 py-2.5 bg-accent text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
-        >
+        <button type="submit" disabled={loading || !question.trim()}>
           {loading ? "Searching..." : "Ask"}
         </button>
       </form>
 
       {/* Loading state */}
       {loading && (
-        <div className="mt-8 flex items-center gap-3 text-muted-foreground">
-          <div className="h-4 w-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+        <div className="mt-8 flex items-center gap-3" style={{ color: "var(--muted-foreground)" }}>
+          <div className="spinner" style={{ width: "1rem", height: "1rem" }} />
           <span>Searching knowledge base and generating answer...</span>
         </div>
       )}
 
       {/* Error state */}
       {error && (
-        <div className="mt-8 p-4 rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300">
+        <div className="error-box mt-8">
           {error}
         </div>
       )}
 
       {/* Result */}
       {result && (
-        <div className="mt-8 space-y-6">
-          <div className="whitespace-pre-wrap leading-relaxed">
+        <div className="mt-8" style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.7 }}>
             {result.answer}
           </div>
           <SourceList sources={result.sources} />
@@ -184,8 +171,8 @@ function AskTab() {
 
       {/* Empty state */}
       {!loading && !result && !error && (
-        <div className="mt-16 text-center text-muted-foreground">
-          <p className="text-lg">Ask a question to get started</p>
+        <div className="mt-16 text-center" style={{ color: "var(--muted-foreground)" }}>
+          <p style={{ fontSize: "1.1rem", fontStyle: "italic" }}>Ask a question to get started</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             {[
               "What are the latest AI safety developments?",
@@ -195,8 +182,8 @@ function AskTab() {
               <button
                 key={suggestion}
                 type="button"
+                className="chip-btn"
                 onClick={() => setQuestion(suggestion)}
-                className="text-sm px-3 py-1.5 rounded-full border border-border hover:border-accent hover:text-accent transition-colors"
               >
                 {suggestion}
               </button>
@@ -213,8 +200,8 @@ function AskTab() {
 /* ------------------------------------------------------------------ */
 
 function BriefingTab() {
-  const [dayIndex, setDayIndex] = useState(1); // default: 2 days
-  const [lengthIndex, setLengthIndex] = useState(2); // default: standard
+  const [dayIndex, setDayIndex] = useState(1);
+  const [lengthIndex, setLengthIndex] = useState(2);
   const [showSettings, setShowSettings] = useState(false);
   const [result, setResult] = useState<BriefingResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -263,15 +250,11 @@ function BriefingTab() {
     <>
       {/* Generate button / settings toggle */}
       {!showSettings && !loading && !result && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground mb-4">
+        <div className="text-center" style={{ padding: "3rem 0" }}>
+          <p style={{ color: "var(--muted-foreground)", marginBottom: "1rem", fontStyle: "italic" }}>
             Get a summary of the most important AI developments
           </p>
-          <button
-            type="button"
-            onClick={() => setShowSettings(true)}
-            className="px-6 py-3 bg-accent text-white rounded-lg font-medium hover:opacity-90 transition-opacity text-base"
-          >
+          <button type="button" onClick={() => setShowSettings(true)}>
             Generate Briefing
           </button>
         </div>
@@ -279,14 +262,14 @@ function BriefingTab() {
 
       {/* Settings panel */}
       {showSettings && !loading && (
-        <div className="border border-border rounded-lg p-6 space-y-6">
-          <h3 className="font-medium">Configure your briefing</h3>
+        <div className="bp-card" style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <h3 style={{ fontWeight: 700, fontStyle: "italic" }}>Configure your briefing</h3>
 
           {/* Time range slider */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium">Time Range</label>
-              <span className="text-sm text-accent font-medium">
+            <div className="flex items-center justify-between" style={{ marginBottom: "0.5rem" }}>
+              <label style={{ fontSize: "0.875rem", fontWeight: 700 }}>Time Range</label>
+              <span className="mono-label" style={{ fontSize: "0.8rem" }}>
                 {DAY_LABELS[days]}
               </span>
             </div>
@@ -297,9 +280,9 @@ function BriefingTab() {
               step={1}
               value={dayIndex}
               onChange={(e) => setDayIndex(Number(e.target.value))}
-              className="w-full accent-accent"
+              style={{ width: "100%" }}
             />
-            <div className="flex justify-between text-xs text-muted-foreground mt-1">
+            <div className="flex justify-between" style={{ fontSize: "0.7rem", color: "var(--muted-foreground)", marginTop: "0.25rem" }}>
               <span>24 hours</span>
               <span>2 weeks</span>
             </div>
@@ -307,9 +290,9 @@ function BriefingTab() {
 
           {/* Length slider */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium">Detail Level</label>
-              <span className="text-sm text-accent font-medium">
+            <div className="flex items-center justify-between" style={{ marginBottom: "0.5rem" }}>
+              <label style={{ fontSize: "0.875rem", fontWeight: 700 }}>Detail Level</label>
+              <span className="mono-label" style={{ fontSize: "0.8rem" }}>
                 {LENGTH_LABELS[length]}
               </span>
             </div>
@@ -320,9 +303,9 @@ function BriefingTab() {
               step={1}
               value={lengthIndex}
               onChange={(e) => setLengthIndex(Number(e.target.value))}
-              className="w-full accent-accent"
+              style={{ width: "100%" }}
             />
-            <div className="flex justify-between text-xs text-muted-foreground mt-1">
+            <div className="flex justify-between" style={{ fontSize: "0.7rem", color: "var(--muted-foreground)", marginTop: "0.25rem" }}>
               <span>Compact</span>
               <span>Detailed</span>
             </div>
@@ -330,18 +313,10 @@ function BriefingTab() {
 
           {/* Action buttons */}
           <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={handleGenerate}
-              className="px-5 py-2.5 bg-accent text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
-            >
+            <button type="button" onClick={handleGenerate}>
               Generate
             </button>
-            <button
-              type="button"
-              onClick={() => setShowSettings(false)}
-              className="px-5 py-2.5 rounded-lg border border-border hover:border-accent transition-colors text-sm"
-            >
+            <button type="button" className="btn-secondary" onClick={() => setShowSettings(false)}>
               Cancel
             </button>
           </div>
@@ -350,48 +325,36 @@ function BriefingTab() {
 
       {/* Loading state */}
       {loading && (
-        <div className="mt-8 flex items-center gap-3 text-muted-foreground">
-          <div className="h-4 w-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+        <div className="mt-8 flex items-center gap-3" style={{ color: "var(--muted-foreground)" }}>
+          <div className="spinner" style={{ width: "1rem", height: "1rem" }} />
           <span>Generating your briefing...</span>
         </div>
       )}
 
       {/* Error state */}
       {error && (
-        <div className="mt-8 p-4 rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300">
-          {error}
-        </div>
+        <div className="error-box mt-8">{error}</div>
       )}
 
       {/* Briefing result */}
       {result && (
-        <div className="mt-2 space-y-6">
+        <div className="mt-2" style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           {/* Meta bar */}
           <div className="flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-              <span className="px-2 py-0.5 rounded-full bg-muted">
-                {result.timeRange}
-              </span>
-              <span className="px-2 py-0.5 rounded-full bg-muted">
-                {LENGTH_LABELS[length]}
-              </span>
-              <span>{result.articleCount} articles analyzed</span>
+            <div className="flex items-center gap-3">
+              <span className="mono-label" style={{ fontSize: "0.75rem" }}>{result.timeRange}</span>
+              <span className="mono-label" style={{ fontSize: "0.75rem" }}>{LENGTH_LABELS[length]}</span>
+              <span className="mono-label" style={{ fontSize: "0.75rem" }}>{result.articleCount} articles</span>
             </div>
             <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={handleCopy}
-                className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
-              >
-                {copied ? "Copied!" : "Copy to clipboard"}
+              <button type="button" className="btn-secondary" style={{ fontSize: "0.8rem", padding: "0.4rem 0.9rem" }} onClick={handleCopy}>
+                {copied ? "Copied!" : "Copy"}
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  setResult(null);
-                  setShowSettings(true);
-                }}
-                className="text-sm px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
+                className="btn-secondary"
+                style={{ fontSize: "0.8rem", padding: "0.4rem 0.9rem" }}
+                onClick={() => { setResult(null); setShowSettings(true); }}
               >
                 New briefing
               </button>
@@ -399,7 +362,7 @@ function BriefingTab() {
           </div>
 
           {/* Briefing content */}
-          <div className="border-l-4 border-accent/20 pl-6 py-2">
+          <div style={{ borderLeft: "3px solid var(--copper)", paddingLeft: "1.5rem", paddingTop: "0.25rem", paddingBottom: "0.25rem" }}>
             <div className="briefing-content">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {result.briefing}
@@ -407,9 +370,7 @@ function BriefingTab() {
             </div>
           </div>
 
-          <div className="font-sans">
-            <SourceList sources={result.sources} />
-          </div>
+          <SourceList sources={result.sources} />
         </div>
       )}
     </>
@@ -423,30 +384,39 @@ function BriefingTab() {
 function SourceList({ sources }: { sources: Source[] }) {
   if (sources.length === 0) return null;
   return (
-    <div className="border-t border-border pt-4">
-      <h2 className="text-sm font-medium text-muted-foreground mb-3">
+    <div style={{ borderTop: "1px solid var(--border)", paddingTop: "1rem" }}>
+      <h2 style={{ fontSize: "0.8rem", fontFamily: "'Inter', sans-serif", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--muted-foreground)", marginBottom: "0.75rem" }}>
         Sources ({sources.length})
       </h2>
-      <ul className="space-y-2">
+      <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         {sources.map((source, i) => (
           <li key={i}>
             <a
               href={source.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-start gap-2 p-3 rounded-lg border border-border hover:border-accent hover:bg-accent-light transition-colors"
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "0.5rem",
+                padding: "0.75rem",
+                border: "1px solid var(--border)",
+                borderRadius: "4px",
+                textDecoration: "none",
+                transition: "border-color 0.15s ease",
+              }}
             >
-              <span className="text-xs font-mono text-muted-foreground mt-0.5">
+              <span className="mono-label" style={{ fontSize: "0.7rem", marginTop: "0.15rem" }}>
                 {i + 1}
               </span>
-              <div className="min-w-0">
-                <span className="text-sm font-medium text-accent group-hover:underline block truncate">
+              <div style={{ minWidth: 0 }}>
+                <span style={{ fontSize: "0.875rem", fontWeight: 700, color: "var(--ink)", display: "block" }}>
                   {source.title}
                 </span>
-                <span className="text-xs text-muted-foreground">
+                <span className="mono-label" style={{ fontSize: "0.7rem" }}>
                   {source.source_name}
                   {source.published_at &&
-                    ` · ${new Date(source.published_at).toLocaleDateString()}`}
+                    ` \u00b7 ${new Date(source.published_at).toLocaleDateString()}`}
                 </span>
               </div>
             </a>

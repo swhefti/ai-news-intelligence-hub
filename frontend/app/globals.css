@@ -1,13 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=JetBrains+Mono:wght@500&display=swap');
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------ */
+/* Blueprint Archive — Design Tokens                                   */
+/* ------------------------------------------------------------------ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --muted: #f5f5f5;
-  --muted-foreground: #737373;
-  --border: #e5e5e5;
-  --accent: #2563eb;
-  --accent-light: #eff6ff;
+  --paper: #F4F2EE;
+  --ink: #0D2B2B;
+  --copper: #B57A58;
+  --line: rgba(13, 43, 43, 0.1);
+  --shadow: 4px 4px 0px var(--copper);
+
+  /* Map existing tokens → Blueprint palette */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --muted: rgba(13, 43, 43, 0.05);
+  --muted-foreground: rgba(13, 43, 43, 0.55);
+  --border: rgba(13, 43, 43, 0.15);
+  --accent: var(--copper);
+  --accent-light: rgba(181, 122, 88, 0.08);
 }
 
 @theme inline {
@@ -18,44 +30,411 @@
   --color-border: var(--border);
   --color-accent: var(--accent);
   --color-accent-light: var(--accent-light);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'Georgia', serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --muted: #1a1a1a;
-    --muted-foreground: #a3a3a3;
-    --border: #2a2a2a;
-    --accent: #3b82f6;
-    --accent-light: #172554;
-  }
-}
+/* ------------------------------------------------------------------ */
+/* Body — Paper texture with blueprint grid                            */
+/* ------------------------------------------------------------------ */
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  margin: 0;
+  font-family: 'Georgia', serif;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 30px 30px;
+  color: var(--ink);
+  min-height: 100vh;
 }
 
-/* Briefing editorial styles */
+/* ------------------------------------------------------------------ */
+/* Header — Double-line border                                         */
+/* ------------------------------------------------------------------ */
+
+header {
+  border-bottom: 3px double var(--ink) !important;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 0;
+  background: transparent;
+}
+
+/* ------------------------------------------------------------------ */
+/* Footer — Subtle top border                                          */
+/* ------------------------------------------------------------------ */
+
+footer {
+  border-top: 1px solid var(--border) !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Cards — White with ink border + copper shadow                       */
+/* ------------------------------------------------------------------ */
+
+.card, .bp-card {
+  background: white !important;
+  border: 1px solid var(--ink) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--shadow) !important;
+  padding: 1.5rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Buttons — Ink fill, Georgia italic, copper shadow                   */
+/* ------------------------------------------------------------------ */
+
+button, .btn {
+  font-family: 'Georgia', serif;
+}
+
+button:not(.chip-btn):not(.tab-btn):not(.icon-btn):not(.nav-link-btn):not(.toggle-btn) {
+  background: var(--ink) !important;
+  color: white !important;
+  font-style: italic;
+  font-weight: 700;
+  border: none;
+  padding: 0.7rem 1.4rem;
+  border-radius: 4px;
+  box-shadow: 3px 3px 0px var(--copper);
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+button:not(.chip-btn):not(.tab-btn):not(.icon-btn):not(.nav-link-btn):not(.toggle-btn):hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--copper);
+}
+
+button:not(.chip-btn):not(.tab-btn):not(.icon-btn):not(.nav-link-btn):not(.toggle-btn):active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px var(--copper);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Secondary / ghost buttons */
+.btn-secondary {
+  background: transparent !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--ink) !important;
+  box-shadow: none !important;
+  font-style: italic;
+}
+
+.btn-secondary:hover {
+  background: rgba(13, 43, 43, 0.05) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Danger button */
+.btn-danger {
+  background: #8B2500 !important;
+  box-shadow: 3px 3px 0px #6B1D00 !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Chips — Uppercase, Inter, bordered                                  */
+/* ------------------------------------------------------------------ */
+
+.chip-btn {
+  background: transparent !important;
+  border: 1px solid var(--ink) !important;
+  color: var(--ink) !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.7rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em;
+  border-radius: 4px !important;
+  padding: 0.35rem 0.7rem !important;
+  box-shadow: none !important;
+  font-style: normal !important;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.chip-btn:hover {
+  background: rgba(13, 43, 43, 0.06) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.chip-btn.active {
+  background: var(--ink) !important;
+  color: white !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Tab buttons                                                         */
+/* ------------------------------------------------------------------ */
+
+.tab-btn {
+  background: transparent !important;
+  color: var(--muted-foreground) !important;
+  box-shadow: none !important;
+  font-style: italic !important;
+  font-weight: 700;
+  padding: 0.5rem 1rem !important;
+  border: none !important;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.tab-btn:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  color: var(--ink) !important;
+}
+
+.tab-btn.active {
+  background: white !important;
+  color: var(--ink) !important;
+  box-shadow: 2px 2px 0px var(--copper) !important;
+  border: 1px solid var(--ink) !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Toggle buttons (segmented control)                                  */
+/* ------------------------------------------------------------------ */
+
+.toggle-btn {
+  background: transparent !important;
+  color: var(--muted-foreground) !important;
+  box-shadow: none !important;
+  font-style: normal !important;
+  font-weight: 400;
+  border: none !important;
+  padding: 0.35rem 1rem !important;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toggle-btn:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  color: var(--ink) !important;
+}
+
+.toggle-btn.active {
+  background: white !important;
+  color: var(--ink) !important;
+  font-weight: 700;
+  box-shadow: 1px 1px 0px var(--copper) !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Icon buttons (close, info, doc icon, etc.)                          */
+/* ------------------------------------------------------------------ */
+
+.icon-btn {
+  background: transparent !important;
+  color: var(--muted-foreground) !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0.3rem !important;
+  border-radius: 4px;
+  cursor: pointer;
+  font-style: normal !important;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.icon-btn:hover {
+  color: var(--ink) !important;
+  background: rgba(13, 43, 43, 0.06) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Nav link buttons                                                    */
+/* ------------------------------------------------------------------ */
+
+.nav-link-btn {
+  background: transparent !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+  border: 1px solid var(--border) !important;
+  font-style: italic !important;
+  font-weight: 400;
+  padding: 0.35rem 0.9rem !important;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-link-btn:hover {
+  border-color: var(--copper) !important;
+  color: var(--copper) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Technical / mono labels                                             */
+/* ------------------------------------------------------------------ */
+
+.mono-label {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--copper);
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------ */
+/* Inputs                                                              */
+/* ------------------------------------------------------------------ */
+
+input[type="text"],
+input[type="search"] {
+  font-family: 'Georgia', serif;
+  background: white;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink);
+  padding: 0.65rem 1rem;
+}
+
+input[type="text"]:focus,
+input[type="search"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--copper);
+  border-color: var(--copper);
+}
+
+input[type="text"]::placeholder,
+input[type="search"]::placeholder {
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+
+/* Range slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: var(--ink);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--copper);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--copper);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ */
+/* Links                                                               */
+/* ------------------------------------------------------------------ */
+
+a {
+  color: var(--ink);
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--copper);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tables                                                              */
+/* ------------------------------------------------------------------ */
+
+table {
+  font-family: 'Georgia', serif;
+}
+
+th {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+}
+
+td {
+  font-size: 0.875rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Modals                                                              */
+/* ------------------------------------------------------------------ */
+
+.modal-overlay {
+  background: rgba(13, 43, 43, 0.4);
+}
+
+.modal-content {
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 6px 6px 0px var(--copper);
+}
+
+/* ------------------------------------------------------------------ */
+/* Error states                                                        */
+/* ------------------------------------------------------------------ */
+
+.error-box {
+  background: #FEF2F2;
+  border: 1px solid #8B2500;
+  border-radius: 4px;
+  color: #8B2500;
+  padding: 1rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Loading spinner                                                     */
+/* ------------------------------------------------------------------ */
+
+.spinner {
+  border: 2px solid var(--border);
+  border-top-color: var(--copper);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ------------------------------------------------------------------ */
+/* Briefing editorial styles                                           */
+/* ------------------------------------------------------------------ */
+
 .briefing-content {
-  font-family: var(--font-merriweather), Georgia, "Times New Roman", serif;
-  color: #1a1a1a;
-  font-size: 1.1rem;
-  line-height: 1.7;
-}
-
-@media (prefers-color-scheme: dark) {
-  .briefing-content {
-    color: #e0e0e0;
-  }
+  font-family: 'Georgia', serif;
+  color: var(--ink);
+  font-size: 1.05rem;
+  line-height: 1.75;
 }
 
 .briefing-content h2 {
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: 'Georgia', serif;
   font-weight: 700;
   font-size: 1.25rem;
   margin-top: 1.75rem;
@@ -68,9 +447,9 @@ body {
 }
 
 .briefing-content h3 {
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  font-weight: 600;
-  font-size: 1.1rem;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  font-size: 1.05rem;
   margin-top: 1.5rem;
   margin-bottom: 0.4rem;
   line-height: 1.3;
@@ -107,7 +486,7 @@ body {
 }
 
 .briefing-content a {
-  color: var(--accent);
+  color: var(--copper);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -116,7 +495,31 @@ body {
   opacity: 0.8;
 }
 
-/* Editorial serif font utility */
+/* ------------------------------------------------------------------ */
+/* Scrollbar styling                                                   */
+/* ------------------------------------------------------------------ */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* ------------------------------------------------------------------ */
+/* Font utility                                                        */
+/* ------------------------------------------------------------------ */
+
 .font-editorial {
-  font-family: var(--font-merriweather), Georgia, "Times New Roman", serif;
+  font-family: 'Georgia', serif;
 }

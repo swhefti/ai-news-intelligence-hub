@@ -10,16 +10,7 @@ import NavHeader from "@/components/NavHeader";
 
 function CompassIcon({ className = "w-7 h-7" }: { className?: string }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <circle cx="12" cy="12" r="10" />
       <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
     </svg>
@@ -28,16 +19,7 @@ function CompassIcon({ className = "w-7 h-7" }: { className?: string }) {
 
 function ChatBubbleIcon({ className = "w-7 h-7" }: { className?: string }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
     </svg>
   );
@@ -45,16 +27,7 @@ function ChatBubbleIcon({ className = "w-7 h-7" }: { className?: string }) {
 
 function SparklesIcon({ className = "w-7 h-7" }: { className?: string }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z" />
     </svg>
   );
@@ -78,13 +51,16 @@ function FeatureCard({
   return (
     <Link
       href={href}
-      className="group p-6 rounded-xl border border-border hover:border-accent/50 hover:shadow-sm transition-all"
+      className="bp-card group"
+      style={{ display: "block", textDecoration: "none", transition: "transform 0.15s ease, box-shadow 0.15s ease" }}
     >
-      <div className="text-muted-foreground group-hover:text-accent transition-colors mb-3">
+      <div style={{ color: "var(--copper)", marginBottom: "0.75rem" }}>
         {icon}
       </div>
-      <h2 className="text-lg font-semibold">{title}</h2>
-      <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+      <h2 style={{ fontSize: "1.15rem", fontWeight: 700, fontFamily: "'Georgia', serif", marginBottom: "0.3rem" }}>
+        {title}
+      </h2>
+      <p style={{ fontSize: "0.875rem", color: "var(--muted-foreground)", lineHeight: 1.6 }}>
         {description}
       </p>
     </Link>
@@ -106,17 +82,33 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <NavHeader variant="home" />
 
-      <main className="flex-1 flex flex-col items-center justify-center px-6 -mt-16">
+      <main className="flex-1 flex flex-col items-center justify-center px-6" style={{ marginTop: "-4rem" }}>
         {/* Title */}
-        <h1 className="font-editorial text-4xl md:text-5xl font-light text-center tracking-tight">
+        <h1 style={{
+          fontFamily: "'Georgia', serif",
+          fontSize: "clamp(2rem, 5vw, 3.2rem)",
+          fontWeight: 400,
+          fontStyle: "italic",
+          textAlign: "center",
+          letterSpacing: "-0.02em",
+          color: "var(--ink)",
+          lineHeight: 1.2,
+        }}>
           The AI News Intelligence Review
         </h1>
 
         {/* Subtitle */}
-        <p className="mt-6 max-w-2xl text-center text-muted-foreground text-base leading-relaxed">
+        <p style={{
+          marginTop: "1.5rem",
+          maxWidth: "38rem",
+          textAlign: "center",
+          color: "var(--muted-foreground)",
+          fontSize: "1rem",
+          lineHeight: 1.7,
+        }}>
           A retrieval-augmented record of the global AI landscape. We ingest
           200+ sources daily to provide a searchable, high-fidelity archive of
           research, blogs, and industry shifts.
@@ -124,13 +116,16 @@ export default function HomePage() {
 
         {/* Article count */}
         {articleCount !== null && (
-          <p className="mt-4 text-sm text-muted-foreground/70">
+          <p className="mono-label" style={{
+            marginTop: "1rem",
+            fontSize: "0.8rem",
+          }}>
             Currently {articleCount.toLocaleString()} articles indexed
           </p>
         )}
 
         {/* Feature cards */}
-        <div className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6" style={{ marginTop: "3.5rem", maxWidth: "48rem", width: "100%" }}>
           <FeatureCard
             href="/explore"
             icon={<CompassIcon />}

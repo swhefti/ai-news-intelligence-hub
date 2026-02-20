@@ -46,46 +46,23 @@ interface BriefingResult {
 
 function ArrowLeftIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      className={className}
-    >
-      <path
-        fillRule="evenodd"
-        d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z"
-        clipRule="evenodd"
-      />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
+      <path fillRule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clipRule="evenodd" />
     </svg>
   );
 }
 
 function BookmarkIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      className={className}
-    >
-      <path
-        fillRule="evenodd"
-        d="M10 2c-1.716 0-3.408.106-5.07.31C3.806 2.45 3 3.414 3 4.517V17.25a.75.75 0 001.075.676L10 15.082l5.925 2.844A.75.75 0 0017 17.25V4.517c0-1.103-.806-2.068-1.93-2.207A41.403 41.403 0 0010 2z"
-        clipRule="evenodd"
-      />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
+      <path fillRule="evenodd" d="M10 2c-1.716 0-3.408.106-5.07.31C3.806 2.45 3 3.414 3 4.517V17.25a.75.75 0 001.075.676L10 15.082l5.925 2.844A.75.75 0 0017 17.25V4.517c0-1.103-.806-2.068-1.93-2.207A41.403 41.403 0 0010 2z" clipRule="evenodd" />
     </svg>
   );
 }
 
 function CopyIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      className={className}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
       <path d="M7 3.5A1.5 1.5 0 018.5 2h3.879a1.5 1.5 0 011.06.44l3.122 3.12A1.5 1.5 0 0117 6.622V12.5a1.5 1.5 0 01-1.5 1.5h-1v-3.379a3 3 0 00-.879-2.121L10.5 5.379A3 3 0 008.379 4.5H7v-1z" />
       <path d="M4.5 6A1.5 1.5 0 003 7.5v9A1.5 1.5 0 004.5 18h7a1.5 1.5 0 001.5-1.5v-5.879a1.5 1.5 0 00-.44-1.06L9.44 6.439A1.5 1.5 0 008.378 6H4.5z" />
     </svg>
@@ -94,29 +71,15 @@ function CopyIcon({ className = "w-4 h-4" }: { className?: string }) {
 
 function TrashIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      className={className}
-    >
-      <path
-        fillRule="evenodd"
-        d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.519.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
-        clipRule="evenodd"
-      />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
+      <path fillRule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.519.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clipRule="evenodd" />
     </svg>
   );
 }
 
 function PlusIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      className={className}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
       <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
     </svg>
   );
@@ -134,26 +97,17 @@ function DeleteConfirmDialog({
   onCancel: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-background border border-border rounded-xl p-6 max-w-sm mx-4 shadow-lg">
-        <h3 className="text-base font-semibold mb-2">Delete Briefing</h3>
-        <p className="text-sm text-muted-foreground mb-5">
-          Are you sure you want to delete this saved briefing? This action
-          cannot be undone.
+    <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center">
+      <div className="modal-content" style={{ maxWidth: "24rem", margin: "0 1rem", padding: "1.5rem" }}>
+        <h3 style={{ fontSize: "1rem", fontWeight: 700, fontStyle: "italic", marginBottom: "0.5rem" }}>Delete Briefing</h3>
+        <p style={{ fontSize: "0.875rem", color: "var(--muted-foreground)", marginBottom: "1.25rem" }}>
+          Are you sure you want to delete this saved briefing? This action cannot be undone.
         </p>
         <div className="flex gap-3 justify-end">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="text-sm px-4 py-2 rounded-lg border border-border hover:bg-muted transition-colors"
-          >
+          <button type="button" className="btn-secondary" style={{ fontSize: "0.8rem", padding: "0.5rem 1rem" }} onClick={onCancel}>
             Cancel
           </button>
-          <button
-            type="button"
-            onClick={onConfirm}
-            className="text-sm px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
-          >
+          <button type="button" className="btn-danger" style={{ fontSize: "0.8rem", padding: "0.5rem 1rem" }} onClick={onConfirm}>
             Delete
           </button>
         </div>
@@ -170,7 +124,6 @@ function KeywordChip({
   keyword,
   isSelected,
   onClick,
-  color,
 }: {
   keyword: string;
   isSelected: boolean;
@@ -181,20 +134,7 @@ function KeywordChip({
     <button
       type="button"
       onClick={onClick}
-      className="text-[11px] font-medium px-2.5 py-1 rounded-full border transition-all duration-150 cursor-pointer"
-      style={
-        isSelected
-          ? {
-              backgroundColor: color,
-              borderColor: color,
-              color: "#ffffff",
-            }
-          : {
-              backgroundColor: "transparent",
-              borderColor: color + "60",
-              color: color,
-            }
-      }
+      className={`chip-btn ${isSelected ? "active" : ""}`}
     >
       {keyword}
     </button>
@@ -215,10 +155,18 @@ function KeywordFilter({
   onClearAll: () => void;
 }) {
   return (
-    <section className="space-y-3">
+    <section style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
       {Object.entries(KEYWORD_CATEGORIES).map(([category, data]) => (
         <div key={category} className="text-center">
-          <p className="text-[10px] text-muted-foreground mb-1.5 font-medium uppercase tracking-wider">
+          <p style={{
+            fontSize: "0.65rem",
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 800,
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            color: "var(--muted-foreground)",
+            marginBottom: "0.4rem",
+          }}>
             {category}
           </p>
           <div className="flex flex-wrap gap-1.5 justify-center">
@@ -235,11 +183,12 @@ function KeywordFilter({
         </div>
       ))}
       {selectedKeywords.length > 0 && (
-        <div className="text-center mt-2">
+        <div className="text-center" style={{ marginTop: "0.5rem" }}>
           <button
             type="button"
+            className="icon-btn"
             onClick={onClearAll}
-            className="text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+            style={{ fontSize: "0.75rem", fontStyle: "italic", padding: "0.25rem 0.5rem" }}
           >
             Clear all
           </button>
@@ -250,7 +199,7 @@ function KeywordFilter({
 }
 
 /* ------------------------------------------------------------------ */
-/* Time Slider (release-only, same as Explore)                         */
+/* Time Slider                                                         */
 /* ------------------------------------------------------------------ */
 
 const DAY_STEPS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 21, 30];
@@ -268,9 +217,9 @@ function TimeSlider({
 
   return (
     <section className="flex flex-col items-center">
-      <span className="text-xs text-muted-foreground mb-2">
+      <span style={{ fontSize: "0.8rem", color: "var(--muted-foreground)", marginBottom: "0.5rem" }}>
         Last{" "}
-        <span className="font-medium text-foreground">
+        <span className="mono-label">
           {dayLabel} day{dayLabel !== 1 ? "s" : ""}
         </span>
       </span>
@@ -283,20 +232,7 @@ function TimeSlider({
         onChange={(e) => onDrag(parseInt(e.target.value, 10))}
         onMouseUp={onCommit}
         onTouchEnd={onCommit}
-        className="w-[340px] h-1 rounded-full appearance-none cursor-pointer bg-border
-          [&::-webkit-slider-thumb]:appearance-none
-          [&::-webkit-slider-thumb]:w-3.5
-          [&::-webkit-slider-thumb]:h-3.5
-          [&::-webkit-slider-thumb]:rounded-full
-          [&::-webkit-slider-thumb]:bg-foreground
-          [&::-webkit-slider-thumb]:shadow-sm
-          [&::-webkit-slider-thumb]:cursor-pointer
-          [&::-moz-range-thumb]:w-3.5
-          [&::-moz-range-thumb]:h-3.5
-          [&::-moz-range-thumb]:rounded-full
-          [&::-moz-range-thumb]:bg-foreground
-          [&::-moz-range-thumb]:border-0
-          [&::-moz-range-thumb]:cursor-pointer"
+        style={{ width: "340px" }}
       />
     </section>
   );
@@ -319,20 +255,16 @@ function SegmentedToggle<T extends string>({
 }) {
   return (
     <div>
-      <label className="text-[11px] text-muted-foreground block mb-1 text-center">
+      <label style={{ fontSize: "0.7rem", fontFamily: "'Inter', sans-serif", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--muted-foreground)", display: "block", marginBottom: "0.3rem", textAlign: "center" }}>
         {label}
       </label>
-      <div className="flex bg-muted rounded-lg p-0.5">
+      <div className="flex" style={{ background: "var(--muted)", borderRadius: "4px", padding: "2px", border: "1px solid var(--border)" }}>
         {options.map((opt) => (
           <button
             key={opt.value}
             type="button"
+            className={`toggle-btn ${value === opt.value ? "active" : ""}`}
             onClick={() => onChange(opt.value)}
-            className={`text-xs py-1 px-4 rounded-md transition-all duration-150 font-medium ${
-              value === opt.value
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
           >
             {opt.label}
           </button>
@@ -343,7 +275,7 @@ function SegmentedToggle<T extends string>({
 }
 
 /* ------------------------------------------------------------------ */
-/* Briefing Content View (replaces form when viewing a briefing)       */
+/* Briefing Content View                                               */
 /* ------------------------------------------------------------------ */
 
 function BriefingContentView({
@@ -382,53 +314,44 @@ function BriefingContentView({
   };
 
   return (
-    <div className="space-y-5">
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
       {/* Top bar */}
       <div className="flex items-center justify-between">
         <button
           type="button"
+          className="icon-btn"
           onClick={onBack}
-          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.875rem", fontStyle: "italic" }}
         >
           <ArrowLeftIcon className="w-4 h-4" />
           Back
         </button>
         <div className="flex items-center gap-2">
           {!isSaved && onSave && (
-            <button
-              type="button"
-              onClick={onSave}
-              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-border hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-            >
+            <button type="button" className="btn-secondary" style={{ fontSize: "0.75rem", padding: "0.35rem 0.75rem", display: "flex", alignItems: "center", gap: "0.35rem" }} onClick={onSave}>
               <BookmarkIcon className="w-3.5 h-3.5" />
               Save
             </button>
           )}
           <button
             type="button"
-            onClick={() => {
-              handleCopy();
-              onCopy();
-            }}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-border hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+            className="btn-secondary"
+            style={{ fontSize: "0.75rem", padding: "0.35rem 0.75rem", display: "flex", alignItems: "center", gap: "0.35rem" }}
+            onClick={() => { handleCopy(); onCopy(); }}
           >
             <CopyIcon className="w-3.5 h-3.5" />
             {copied ? "Copied!" : "Copy"}
           </button>
           {isSaved && onDelete && (
-            <button
-              type="button"
-              onClick={onDelete}
-              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-red-300 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-950 transition-colors text-red-600 dark:text-red-400"
-            >
+            <button type="button" className="btn-danger" style={{ fontSize: "0.75rem", padding: "0.35rem 0.75rem", display: "flex", alignItems: "center", gap: "0.35rem" }} onClick={onDelete}>
               <TrashIcon className="w-3.5 h-3.5" />
               Delete
             </button>
           )}
           <button
             type="button"
+            style={{ fontSize: "0.75rem", padding: "0.35rem 0.75rem", display: "flex", alignItems: "center", gap: "0.35rem" }}
             onClick={onNewBriefing}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-foreground text-background hover:opacity-90 transition-all font-medium"
           >
             <PlusIcon className="w-3.5 h-3.5" />
             New Briefing
@@ -437,7 +360,7 @@ function BriefingContentView({
       </div>
 
       {/* Meta bar */}
-      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+      <div className="flex items-center gap-3 mono-label" style={{ fontSize: "0.75rem" }}>
         {meta.articlesAnalyzed != null && (
           <>
             <span>{meta.articlesAnalyzed} articles</span>
@@ -446,42 +369,35 @@ function BriefingContentView({
         )}
         <span>{meta.mode === "simple" ? "Simple" : "Extended"}</span>
         <span>&middot;</span>
-        <span>
-          {meta.days} day{meta.days !== 1 ? "s" : ""}
-        </span>
+        <span>{meta.days} day{meta.days !== 1 ? "s" : ""}</span>
         <span>&middot;</span>
         <span>{meta.language === "en" ? "English" : "German"}</span>
         {isSaved && (
           <>
             <span>&middot;</span>
-            <span className="text-accent">Saved</span>
+            <span style={{ fontStyle: "italic" }}>Saved</span>
           </>
         )}
       </div>
 
       {/* Briefing content */}
-      <div className="briefing-content border-l-4 border-accent pl-5 py-1">
+      <div className="briefing-content" style={{ borderLeft: "3px solid var(--copper)", paddingLeft: "1.25rem", paddingTop: "0.25rem" }}>
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{briefing}</ReactMarkdown>
       </div>
 
       {/* Sources */}
       {sources.length > 0 && (
-        <details className="text-sm">
-          <summary className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors font-medium">
+        <details style={{ fontSize: "0.875rem" }}>
+          <summary style={{ cursor: "pointer", color: "var(--muted-foreground)", fontWeight: 700, fontStyle: "italic" }}>
             Sources ({sources.length})
           </summary>
-          <ul className="mt-2 space-y-1.5 pl-4">
+          <ul style={{ marginTop: "0.5rem", paddingLeft: "1rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
             {sources.map((src, i) => (
-              <li key={i} className="text-muted-foreground">
-                <a
-                  href={src.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-accent transition-colors"
-                >
+              <li key={i} style={{ color: "var(--muted-foreground)" }}>
+                <a href={src.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
                   {src.title}
                 </a>
-                <span className="text-xs ml-1.5 opacity-70">
+                <span className="mono-label" style={{ fontSize: "0.7rem", marginLeft: "0.4rem" }}>
                   ({src.source_name})
                 </span>
               </li>
@@ -509,13 +425,12 @@ function HistoryList({
   if (briefings.length === 0) return null;
 
   return (
-    <section className="mt-10">
-      <h2 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wider">
+    <section style={{ marginTop: "2.5rem" }}>
+      <h2 style={{ fontSize: "0.7rem", fontFamily: "'Inter', sans-serif", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--muted-foreground)", marginBottom: "0.75rem" }}>
         Saved Briefings
       </h2>
-      <div className="space-y-2">
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         {briefings.map((b) => {
-          // Extract first heading or first ~80 chars as preview
           const firstLine = b.briefing.split("\n").find((l) => l.trim().length > 0) || "";
           const preview = firstLine.replace(/^#+\s*/, "").slice(0, 90);
           const date = new Date(b.savedAt);
@@ -524,12 +439,31 @@ function HistoryList({
           return (
             <div
               key={b.id}
-              className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-accent/40 hover:bg-muted/50 transition-all cursor-pointer group"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.75rem",
+                padding: "0.75rem",
+                border: "1px solid var(--border)",
+                borderRadius: "4px",
+                cursor: "pointer",
+                transition: "border-color 0.15s ease, background 0.15s ease",
+              }}
               onClick={() => onSelect(b)}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "var(--copper)";
+                (e.currentTarget as HTMLElement).style.background = "rgba(181, 122, 88, 0.04)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
+                (e.currentTarget as HTMLElement).style.background = "transparent";
+              }}
             >
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{preview || "Untitled briefing"}</p>
-                <div className="flex items-center gap-2 mt-0.5 text-xs text-muted-foreground">
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: "0.875rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {preview || "Untitled briefing"}
+                </p>
+                <div className="flex items-center gap-2 mono-label" style={{ marginTop: "0.15rem", fontSize: "0.7rem" }}>
                   <span>{timeAgo}</span>
                   <span>&middot;</span>
                   <span>{b.mode === "simple" ? "Simple" : "Extended"}</span>
@@ -538,7 +472,7 @@ function HistoryList({
                   {b.keywords.length > 0 && (
                     <>
                       <span>&middot;</span>
-                      <span className="truncate max-w-[150px]">
+                      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "150px" }}>
                         {b.keywords.slice(0, 3).join(", ")}
                         {b.keywords.length > 3 ? ` +${b.keywords.length - 3}` : ""}
                       </span>
@@ -548,12 +482,12 @@ function HistoryList({
               </div>
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(b.id);
-                }}
-                className="opacity-0 group-hover:opacity-100 p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-950 text-muted-foreground hover:text-red-600 dark:hover:text-red-400 transition-all"
+                className="icon-btn"
+                onClick={(e) => { e.stopPropagation(); onDelete(b.id); }}
                 title="Delete"
+                style={{ opacity: 0.3, transition: "opacity 0.15s ease" }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; (e.currentTarget as HTMLElement).style.color = "#8B2500"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.3"; (e.currentTarget as HTMLElement).style.color = "var(--muted-foreground)"; }}
               >
                 <TrashIcon className="w-3.5 h-3.5" />
               </button>
@@ -583,28 +517,23 @@ function getTimeAgo(date: Date): string {
 /* ------------------------------------------------------------------ */
 
 export default function GeneratePage() {
-  // Form state
   const [keywords, setKeywords] = useState<string[]>([]);
-  const [sliderIdx, setSliderIdx] = useState(2); // index 2 = 3 days
+  const [sliderIdx, setSliderIdx] = useState(2);
   const [committedIdx, setCommittedIdx] = useState(2);
   const [mode, setMode] = useState<"simple" | "extended">("simple");
   const [language, setLanguage] = useState<"en" | "de">("en");
 
-  // Generation state
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // View state
   const [view, setView] = useState<ViewState>("form");
   const [currentBriefing, setCurrentBriefing] = useState<BriefingResult | null>(null);
   const [currentSavedId, setCurrentSavedId] = useState<string | null>(null);
   const [selectedSaved, setSelectedSaved] = useState<SavedBriefing | null>(null);
 
-  // History
   const [savedBriefings, setSavedBriefings] = useState<SavedBriefing[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
-  // Load saved briefings on mount
   useEffect(() => {
     setSavedBriefings(getSavedBriefings());
   }, []);
@@ -642,9 +571,7 @@ export default function GeneratePage() {
       setCurrentSavedId(null);
       setView("newBriefing");
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "An unexpected error occurred"
-      );
+      setError(err instanceof Error ? err.message : "An unexpected error occurred");
     } finally {
       setIsGenerating(false);
     }
@@ -656,10 +583,7 @@ export default function GeneratePage() {
       days: currentBriefing.meta.days,
       mode: currentBriefing.meta.mode,
       language: currentBriefing.meta.language,
-      keywords:
-        currentBriefing.meta.keywordsUsed === "all"
-          ? []
-          : currentBriefing.meta.keywordsUsed,
+      keywords: currentBriefing.meta.keywordsUsed === "all" ? [] : currentBriefing.meta.keywordsUsed,
       briefing: currentBriefing.briefing,
       sources: currentBriefing.sources,
     });
@@ -676,7 +600,6 @@ export default function GeneratePage() {
     if (!deleteTarget) return;
     storageDelete(deleteTarget);
     refreshHistory();
-    // If we're viewing the deleted briefing, go back to form
     if (view === "savedBriefing" && selectedSaved?.id === deleteTarget) {
       setView("form");
       setSelectedSaved(null);
@@ -694,31 +617,25 @@ export default function GeneratePage() {
     setSelectedSaved(null);
   }, []);
 
-  /* ---------------------------------------------------------------- */
-  /* Render                                                            */
-  /* ---------------------------------------------------------------- */
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <NavHeader currentPage="generate" />
 
-      {/* Main content */}
       <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8">
         {/* ---- FORM VIEW ---- */}
         {view === "form" && (
-          <div className="space-y-8">
-            {/* Generate button — prominent, top */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+            {/* Generate button */}
             <div className="flex justify-center">
               <button
                 type="button"
                 onClick={handleGenerate}
                 disabled={isGenerating}
-                className="px-8 py-3 rounded-xl font-semibold text-base transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed
-                  bg-foreground text-background hover:opacity-90 active:scale-[0.98]"
+                style={{ fontSize: "1rem", padding: "0.8rem 2rem" }}
               >
                 {isGenerating ? (
                   <span className="flex items-center gap-2.5">
-                    <span className="h-4 w-4 border-2 border-background/40 border-t-background rounded-full animate-spin" />
+                    <span className="spinner" style={{ width: "1rem", height: "1rem", borderColor: "rgba(255,255,255,0.3)", borderTopColor: "white" }} />
                     Generating...
                   </span>
                 ) : (
@@ -727,21 +644,18 @@ export default function GeneratePage() {
               </button>
             </div>
 
-            {/* Keyword filter */}
             <KeywordFilter
               selectedKeywords={keywords}
               onToggle={toggleKeyword}
               onClearAll={() => setKeywords([])}
             />
 
-            {/* Time slider */}
             <TimeSlider
               displayValue={sliderIdx}
               onDrag={setSliderIdx}
               onCommit={() => setCommittedIdx(sliderIdx)}
             />
 
-            {/* Toggle row */}
             <div className="flex gap-4 justify-center">
               <SegmentedToggle
                 label="Detail level"
@@ -763,26 +677,17 @@ export default function GeneratePage() {
               />
             </div>
 
-            {/* Error state */}
-            {error && (
-              <div className="p-4 rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm">
-                {error}
-              </div>
-            )}
+            {error && <div className="error-box">{error}</div>}
 
-            {/* Loading state */}
             {isGenerating && (
-              <div className="flex items-center justify-center py-16">
-                <div className="flex flex-col items-center gap-3 text-muted-foreground">
-                  <div className="h-6 w-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-                  <span className="text-sm">
-                    Analyzing articles and generating briefing...
-                  </span>
+              <div className="flex items-center justify-center" style={{ padding: "4rem 0" }}>
+                <div className="flex flex-col items-center gap-3" style={{ color: "var(--muted-foreground)" }}>
+                  <div className="spinner" style={{ width: "1.5rem", height: "1.5rem" }} />
+                  <span style={{ fontSize: "0.875rem" }}>Analyzing articles and generating briefing...</span>
                 </div>
               </div>
             )}
 
-            {/* History list */}
             <HistoryList
               briefings={savedBriefings}
               onSelect={handleSelectSaved}
@@ -806,11 +711,7 @@ export default function GeneratePage() {
             onBack={handleNewBriefing}
             onSave={handleSaveCurrent}
             onCopy={() => {}}
-            onDelete={
-              currentSavedId
-                ? () => setDeleteTarget(currentSavedId)
-                : undefined
-            }
+            onDelete={currentSavedId ? () => setDeleteTarget(currentSavedId) : undefined}
             onNewBriefing={handleNewBriefing}
           />
         )}
@@ -826,10 +727,7 @@ export default function GeneratePage() {
               language: selectedSaved.language,
             }}
             isSaved={true}
-            onBack={() => {
-              setView("form");
-              setSelectedSaved(null);
-            }}
+            onBack={() => { setView("form"); setSelectedSaved(null); }}
             onCopy={() => {}}
             onDelete={() => setDeleteTarget(selectedSaved.id)}
             onNewBriefing={handleNewBriefing}
@@ -837,7 +735,6 @@ export default function GeneratePage() {
         )}
       </main>
 
-      {/* Delete confirmation dialog */}
       {deleteTarget && (
         <DeleteConfirmDialog
           onConfirm={handleDeleteConfirm}
@@ -846,27 +743,15 @@ export default function GeneratePage() {
       )}
 
       {/* Footer nav */}
-      <footer className="border-t border-border px-6 py-4">
-        <div className="max-w-3xl mx-auto flex items-center justify-center gap-6 text-sm text-muted-foreground">
-          <Link
-            href="/explore"
-            className="hover:text-accent transition-colors"
-          >
-            Explore
-          </Link>
-          <span className="text-border">|</span>
-          <Link href="/chat" className="hover:text-accent transition-colors">
-            Chat
-          </Link>
-          <span className="text-border">|</span>
-          <span className="text-foreground font-medium">Generate</span>
-          <span className="text-border">|</span>
-          <Link
-            href="/dashboard"
-            className="hover:text-accent transition-colors"
-          >
-            Sources
-          </Link>
+      <footer style={{ padding: "1rem 1.5rem" }}>
+        <div className="max-w-3xl mx-auto flex items-center justify-center gap-6" style={{ fontSize: "0.85rem", color: "var(--muted-foreground)", fontStyle: "italic" }}>
+          <Link href="/explore" style={{ textDecoration: "none" }}>Explore</Link>
+          <span style={{ color: "var(--border)" }}>|</span>
+          <Link href="/chat" style={{ textDecoration: "none" }}>Chat</Link>
+          <span style={{ color: "var(--border)" }}>|</span>
+          <span style={{ color: "var(--ink)", fontWeight: 700 }}>Generate</span>
+          <span style={{ color: "var(--border)" }}>|</span>
+          <Link href="/dashboard" style={{ textDecoration: "none", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", fontStyle: "normal", textTransform: "uppercase", letterSpacing: "0.05em" }}>Sources</Link>
         </div>
       </footer>
     </div>
