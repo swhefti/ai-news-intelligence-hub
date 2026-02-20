@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import NavHeader from "@/components/NavHeader";
 
 /* ------------------------------------------------------------------ */
@@ -88,6 +89,16 @@ export default function HomePage() {
       <NavHeader variant="home" hideSourcesLink />
 
       <main className="flex-1 flex flex-col items-center justify-center px-6" style={{ marginTop: "-4rem" }}>
+        {/* Hero image */}
+        <Image
+          src="/ai-news-hero.png"
+          alt="AI News Intelligence Hub"
+          width={625}
+          height={265}
+          priority
+          style={{ marginBottom: "1.5rem" }}
+        />
+
         {/* Title */}
         <h1 style={{
           fontFamily: "'Georgia', serif",
