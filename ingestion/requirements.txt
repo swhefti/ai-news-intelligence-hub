@@ -11,6 +11,9 @@ requests>=2.31.0
 # OpenAI API (for embeddings)
 openai>=1.0.0
 
+# Anthropic API (for summary generation)
+anthropic>=0.30.0
+
 # Supabase (for storage)
 supabase>=2.0.0
 

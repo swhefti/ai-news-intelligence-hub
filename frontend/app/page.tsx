@@ -6,6 +6,24 @@ import Image from "next/image";
 import NavHeader from "@/components/NavHeader";
 
 /* ------------------------------------------------------------------ */
+/* Types                                                               */
+/* ------------------------------------------------------------------ */
+
+interface Headline {
+  title: string;
+  url: string;
+}
+
+interface DailySummary {
+  id: string;
+  date: string;
+  summary: string;
+  headlines: Headline[];
+  trending_keywords: string[];
+  article_count: number;
+}
+
+/* ------------------------------------------------------------------ */
 /* SVG Icons                                                           */
 /* ------------------------------------------------------------------ */
 
@@ -71,16 +89,226 @@ function FeatureCard({
 }
 
 /* ------------------------------------------------------------------ */
+/* Date helpers                                                        */
+/* ------------------------------------------------------------------ */
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString + "T12:00:00");
+  return date.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+function formatShortDate(dateString: string): string {
+  const date = new Date(dateString + "T12:00:00");
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function isToday(dateString: string): boolean {
+  return dateString === new Date().toISOString().split("T")[0];
+}
+
+/* ------------------------------------------------------------------ */
+/* Daily Summary Section                                               */
+/* ------------------------------------------------------------------ */
+
+function DailySummarySection({
+  selected,
+  allSummaries,
+  onSelect,
+}: {
+  selected: DailySummary;
+  allSummaries: DailySummary[];
+  onSelect: (s: DailySummary) => void;
+}) {
+  return (
+    <section style={{ maxWidth: "48rem", width: "100%", marginTop: "3rem" }}>
+      {/* Section title + date tabs */}
+      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "1.25rem", flexWrap: "wrap", gap: "0.5rem" }}>
+        <div>
+          <h2 style={{
+            fontSize: "0.7rem",
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 800,
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            color: "var(--muted-foreground)",
+          }}>
+            Daily Summary
+          </h2>
+          <p style={{
+            fontSize: "0.95rem",
+            fontFamily: "'Georgia', serif",
+            fontStyle: "italic",
+            color: "var(--ink)",
+            marginTop: "0.2rem",
+          }}>
+            {formatDate(selected.date)}
+            {isToday(selected.date) && (
+              <span className="mono-label" style={{ fontSize: "0.65rem", marginLeft: "0.5rem", color: "var(--copper)" }}>
+                Today
+              </span>
+            )}
+          </p>
+        </div>
+
+        {/* Date picker tabs */}
+        {allSummaries.length > 1 && (
+          <div style={{ display: "flex", gap: "0.25rem" }}>
+            {allSummaries.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                className="toggle-btn"
+                style={selected.id === s.id ? {
+                  background: "white",
+                  color: "var(--ink)",
+                  fontWeight: 700,
+                  boxShadow: "1px 1px 0px var(--copper)",
+                  fontSize: "0.72rem",
+                  padding: "0.25rem 0.5rem",
+                } : {
+                  fontSize: "0.72rem",
+                  padding: "0.25rem 0.5rem",
+                }}
+                onClick={() => onSelect(s)}
+              >
+                {formatShortDate(s.date)}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Summary card */}
+      <div className="bp-card" style={{ padding: "1.5rem" }}>
+        {/* Summary text */}
+        <p style={{
+          fontSize: "0.95rem",
+          lineHeight: 1.8,
+          color: "var(--ink)",
+          borderLeft: "3px solid var(--copper)",
+          paddingLeft: "1rem",
+        }}>
+          {selected.summary}
+        </p>
+
+        {/* Article count */}
+        <p className="mono-label" style={{ fontSize: "0.7rem", marginTop: "1rem" }}>
+          Based on {selected.article_count} articles
+        </p>
+
+        {/* Headlines */}
+        {selected.headlines && selected.headlines.length > 0 && (
+          <div style={{ marginTop: "1.25rem", paddingTop: "1rem", borderTop: "1px solid var(--border)" }}>
+            <h3 style={{
+              fontSize: "0.65rem",
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              color: "var(--muted-foreground)",
+              marginBottom: "0.6rem",
+            }}>
+              Top Headlines
+            </h3>
+            <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              {selected.headlines.map((h, i) => (
+                <li key={i}>
+                  <a
+                    href={h.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      fontSize: "0.875rem",
+                      color: "var(--ink)",
+                      textDecoration: "none",
+                      fontWeight: 600,
+                      transition: "color 0.15s ease",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "var(--copper)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "var(--ink)"; }}
+                  >
+                    {h.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Trending keywords */}
+        {selected.trending_keywords && selected.trending_keywords.length > 0 && (
+          <div style={{ marginTop: "1.25rem", paddingTop: "1rem", borderTop: "1px solid var(--border)" }}>
+            <h3 style={{
+              fontSize: "0.65rem",
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              color: "var(--muted-foreground)",
+              marginBottom: "0.6rem",
+            }}>
+              Trending Topics
+            </h3>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem" }}>
+              {selected.trending_keywords.map((kw, i) => (
+                <span
+                  key={i}
+                  className="mono-label"
+                  style={{
+                    fontSize: "0.72rem",
+                    padding: "0.2rem 0.55rem",
+                    border: "1px solid var(--border)",
+                    borderRadius: "4px",
+                    background: "white",
+                  }}
+                >
+                  {kw}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* Home Page                                                           */
 /* ------------------------------------------------------------------ */
 
 export default function HomePage() {
   const [articleCount, setArticleCount] = useState<number | null>(null);
+  const [summaries, setSummaries] = useState<DailySummary[]>([]);
+  const [selectedSummary, setSelectedSummary] = useState<DailySummary | null>(null);
 
   useEffect(() => {
     fetch("/api/stats")
       .then((res) => res.json())
       .then((data) => setArticleCount(data.articleCount))
+      .catch(() => {});
+
+    fetch("/api/summaries?limit=7")
+      .then((res) => res.json())
+      .then((data) => {
+        const items = data.summaries || [];
+        // Parse JSONB fields if they come as strings
+        const parsed = items.map((s: DailySummary) => ({
+          ...s,
+          headlines: typeof s.headlines === "string" ? JSON.parse(s.headlines) : (s.headlines || []),
+          trending_keywords: typeof s.trending_keywords === "string" ? JSON.parse(s.trending_keywords) : (s.trending_keywords || []),
+        }));
+        setSummaries(parsed);
+        if (parsed.length > 0) setSelectedSummary(parsed[0]);
+      })
       .catch(() => {});
   }, []);
 
@@ -88,7 +316,7 @@ export default function HomePage() {
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <NavHeader variant="full" />
 
-      <main className="flex-1 flex flex-col items-center justify-center px-6" style={{ marginTop: "-4rem" }}>
+      <main className="flex-1 flex flex-col items-center px-6" style={{ paddingTop: "2rem", paddingBottom: "4rem" }}>
         {/* Hero image */}
         <Image
           src="/ai-news-hero.png"
@@ -142,12 +370,21 @@ export default function HomePage() {
             onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.7"; }}
             onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; }}
           >
-            Currently {articleCount.toLocaleString()} articles indexed →
+            Currently {articleCount.toLocaleString()} articles indexed
           </Link>
         )}
 
+        {/* Daily summary */}
+        {selectedSummary && (
+          <DailySummarySection
+            selected={selectedSummary}
+            allSummaries={summaries}
+            onSelect={setSelectedSummary}
+          />
+        )}
+
         {/* Feature cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6" style={{ marginTop: "3.5rem", maxWidth: "48rem", width: "100%" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6" style={{ marginTop: "3rem", maxWidth: "48rem", width: "100%" }}>
           <FeatureCard
             href="/explore"
             icon={<CompassIcon />}
