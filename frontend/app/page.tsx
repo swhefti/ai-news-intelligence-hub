@@ -86,7 +86,7 @@ export default function HomePage() {
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <NavHeader variant="home" hideSourcesLink />
+      <NavHeader variant="full" />
 
       <main className="flex-1 flex flex-col items-center justify-center px-6" style={{ marginTop: "-4rem" }}>
         {/* Hero image */}
@@ -122,9 +122,9 @@ export default function HomePage() {
           fontSize: "1.15rem",
           lineHeight: 1.7,
         }}>
-          A retrieval-augmented record of the global AI landscape. We ingest
-          200+ sources daily to provide a searchable, high-fidelity archive of
-          research, blogs, and industry shifts.
+          A retrieval-augmented record of the global AI landscape. Daily 100+
+          sources are ingested to provide a searchable, high-fidelity archive
+          of research, blogs, and industry shifts.
         </p>
 
         {/* Article count */}

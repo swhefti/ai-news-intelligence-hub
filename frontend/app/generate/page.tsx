@@ -4,10 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import NavHeader from "@/components/NavHeader";
-import {
-  KEYWORD_CATEGORIES,
-  getCategoryColor,
-} from "@/lib/keyword-categories";
+import { KEYWORD_CATEGORIES } from "@/lib/keyword-categories";
 import {
   SavedBriefing,
   getSavedBriefings,
@@ -116,71 +113,8 @@ function DeleteConfirmDialog({
 }
 
 /* ------------------------------------------------------------------ */
-/* Keyword Checkbox                                                    */
+/* Keyword Filter Section                                              */
 /* ------------------------------------------------------------------ */
-
-function KeywordCheckbox({
-  keyword,
-  isSelected,
-  onClick,
-}: {
-  keyword: string;
-  isSelected: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <label
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.35rem",
-        cursor: "pointer",
-        fontSize: "0.8rem",
-        color: isSelected ? "var(--ink)" : "var(--muted-foreground)",
-        fontWeight: isSelected ? 600 : 400,
-        transition: "color 0.15s ease",
-        whiteSpace: "nowrap",
-      }}
-    >
-      <input
-        type="checkbox"
-        checked={isSelected}
-        onChange={onClick}
-        style={{
-          accentColor: "var(--copper)",
-          width: "0.85rem",
-          height: "0.85rem",
-          cursor: "pointer",
-        }}
-      />
-      {keyword}
-    </label>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Keyword Filter Section (table layout)                               */
-/* ------------------------------------------------------------------ */
-
-/** Split an array into 2 roughly-equal rows */
-function splitIntoRows<T>(items: T[]): [T[], T[]] {
-  const mid = Math.ceil(items.length / 2);
-  return [items.slice(0, mid), items.slice(mid)];
-}
-
-const cellStyle: React.CSSProperties = {
-  padding: "0.35rem 0.6rem",
-  borderRight: "1px solid var(--border)",
-  borderBottom: "1px solid var(--border)",
-  verticalAlign: "middle",
-  textAlign: "center",
-  whiteSpace: "nowrap",
-};
-
-const lastCellStyle: React.CSSProperties = {
-  ...cellStyle,
-  borderRight: "none",
-};
 
 function KeywordFilter({
   selectedKeywords,
@@ -192,70 +126,69 @@ function KeywordFilter({
   onClearAll: () => void;
 }) {
   return (
-    <section style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      {Object.entries(KEYWORD_CATEGORIES).map(([category, data]) => {
-        const [row1, row2] = splitIntoRows(data.keywords);
-        const colCount = row1.length;
-
-        return (
-          <div key={category}>
-            <p style={{
-              fontSize: "0.65rem",
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 800,
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              color: "var(--muted-foreground)",
-              marginBottom: "0.35rem",
-              textAlign: "center",
-            }}>
-              {category}
-            </p>
-            <table style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              border: "1px solid var(--border)",
-              borderRadius: "4px",
-              tableLayout: "auto",
-            }}>
-              <tbody>
-                <tr>
-                  {row1.map((kw, i) => (
-                    <td key={kw} style={i === colCount - 1 ? lastCellStyle : cellStyle}>
-                      <KeywordCheckbox
-                        keyword={kw}
-                        isSelected={selectedKeywords.includes(kw)}
-                        onClick={() => onToggle(kw)}
-                      />
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  {Array.from({ length: colCount }).map((_, i) => {
-                    const kw = row2[i];
-                    const isLast = i === colCount - 1;
-                    const style: React.CSSProperties = {
-                      ...(isLast ? lastCellStyle : cellStyle),
-                      borderBottom: "none",
-                    };
-                    return (
-                      <td key={kw ?? `empty-${i}`} style={style}>
-                        {kw ? (
-                          <KeywordCheckbox
-                            keyword={kw}
-                            isSelected={selectedKeywords.includes(kw)}
-                            onClick={() => onToggle(kw)}
-                          />
-                        ) : null}
-                      </td>
-                    );
-                  })}
-                </tr>
-              </tbody>
-            </table>
+    <section style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+      {Object.entries(KEYWORD_CATEGORIES).map(([category, data]) => (
+        <div
+          key={category}
+          style={{
+            borderLeft: `3px solid ${data.color}`,
+            paddingLeft: "1rem",
+          }}
+        >
+          <p style={{
+            fontSize: "0.65rem",
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 800,
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            color: "var(--muted-foreground)",
+            marginBottom: "0.5rem",
+          }}>
+            {category}
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
+            {data.keywords.map((kw) => {
+              const isSelected = selectedKeywords.includes(kw);
+              return (
+                <label
+                  key={kw}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.35rem",
+                    cursor: "pointer",
+                    fontSize: "0.8rem",
+                    padding: "0.3rem 0.6rem",
+                    borderRadius: "4px",
+                    border: isSelected
+                      ? `1px solid ${data.color}`
+                      : "1px solid var(--border)",
+                    background: isSelected ? `${data.color}0D` : "white",
+                    color: isSelected ? "var(--ink)" : "var(--muted-foreground)",
+                    fontWeight: isSelected ? 600 : 400,
+                    transition: "all 0.15s ease",
+                    whiteSpace: "nowrap",
+                    userSelect: "none",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => onToggle(kw)}
+                    style={{
+                      accentColor: data.color,
+                      width: "0.85rem",
+                      height: "0.85rem",
+                      cursor: "pointer",
+                    }}
+                  />
+                  {kw}
+                </label>
+              );
+            })}
           </div>
-        );
-      })}
+        </div>
+      ))}
       {selectedKeywords.length > 0 && (
         <div className="text-center">
           <button
@@ -264,7 +197,7 @@ function KeywordFilter({
             onClick={onClearAll}
             style={{ fontSize: "0.75rem", fontStyle: "italic", padding: "0.25rem 0.5rem" }}
           >
-            Clear all
+            Clear all ({selectedKeywords.length})
           </button>
         </div>
       )}
