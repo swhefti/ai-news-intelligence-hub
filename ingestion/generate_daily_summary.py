@@ -8,21 +8,54 @@ in the daily_summaries table for display on the homepage.
 
 Usage:
     python generate_daily_summary.py [--hours 24] [--dry-run]
+
+Required database table (run in Supabase SQL Editor if not exists):
+
+    CREATE TABLE IF NOT EXISTS daily_summaries (
+      id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+      date DATE UNIQUE NOT NULL,
+      summary TEXT NOT NULL,
+      headlines JSONB DEFAULT '[]',
+      trending_keywords JSONB DEFAULT '[]',
+      article_count INTEGER,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS daily_summaries_date_idx
+      ON daily_summaries(date DESC);
 """
 
 import argparse
-import json
 import logging
 import os
 import sys
+import traceback
 from datetime import datetime, timedelta, timezone
 
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
+
+
+def ensure_table_exists(supabase):
+    """Check that daily_summaries table exists by doing a lightweight query."""
+    try:
+        supabase.table("daily_summaries").select("id").limit(1).execute()
+        return True
+    except Exception as e:
+        err_msg = str(e).lower()
+        if "relation" in err_msg and "does not exist" in err_msg:
+            logger.error(
+                "Table 'daily_summaries' does not exist. "
+                "Run the CREATE TABLE SQL in Supabase SQL Editor. "
+                "See the docstring at the top of this file."
+            )
+            return False
+        # Some other error — table might exist but query failed for another reason
+        logger.warning("Could not verify table exists: %s", e)
+        return True  # optimistically continue
 
 
 def generate_daily_summary(hours: int = 24, dry_run: bool = False):
@@ -36,17 +69,30 @@ def generate_daily_summary(hours: int = 24, dry_run: bool = False):
     supabase_key = os.environ.get("SUPABASE_KEY")
     anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
 
-    if not all([supabase_url, supabase_key, anthropic_key]):
-        logger.error("Missing required env vars: SUPABASE_URL, SUPABASE_KEY, ANTHROPIC_API_KEY")
+    missing = []
+    if not supabase_url:
+        missing.append("SUPABASE_URL")
+    if not supabase_key:
+        missing.append("SUPABASE_KEY")
+    if not anthropic_key:
+        missing.append("ANTHROPIC_API_KEY")
+
+    if missing:
+        logger.error("Missing required env vars: %s", ", ".join(missing))
         sys.exit(1)
 
     supabase = create_client(supabase_url, supabase_key)
     anthropic = Anthropic(api_key=anthropic_key)
 
+    # Verify table exists
+    if not ensure_table_exists(supabase):
+        sys.exit(1)
+
     today = datetime.now(timezone.utc).date()
     cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
 
     # ── Fetch recent articles ────────────────────────────────────────
+    logger.info("Fetching articles from the last %d hours...", hours)
     articles_resp = (
         supabase.table("articles")
         .select("id, title, url, source_name, keywords, summary")
@@ -63,6 +109,7 @@ def generate_daily_summary(hours: int = 24, dry_run: bool = False):
     logger.info("Found %d articles in the last %d hours", article_count, hours)
 
     # ── Fetch chunks for detailed context ────────────────────────────
+    logger.info("Fetching chunks for context...")
     chunks_resp = (
         supabase.table("chunks")
         .select("text, article_title, article_url, source_name")
@@ -71,6 +118,7 @@ def generate_daily_summary(hours: int = 24, dry_run: bool = False):
         .execute()
     )
     chunks = chunks_resp.data or []
+    logger.info("Got %d chunks for context", len(chunks))
 
     # Build context from up to 30 diverse chunks
     context = "\n\n".join(
@@ -133,6 +181,7 @@ TRENDING_KEYWORDS:
     )
 
     response_text = response.content[0].text
+    logger.info("Got response from Claude (%d chars)", len(response_text))
 
     # ── Parse the response ───────────────────────────────────────────
     summary = ""
@@ -159,9 +208,13 @@ TRENDING_KEYWORDS:
         trending_keywords = [k.strip() for k in keywords_line.split(",") if k.strip()]
 
     # ── Log results ──────────────────────────────────────────────────
-    logger.info("Summary: %d chars", len(summary))
-    logger.info("Headlines: %d", len(headlines))
-    logger.info("Trending keywords: %s", trending_keywords)
+    logger.info("Parsed summary: %d chars", len(summary))
+    logger.info("Parsed headlines: %d", len(headlines))
+    logger.info("Parsed trending keywords: %s", trending_keywords)
+
+    if not summary:
+        logger.error("Failed to parse summary from Claude response. Raw response:\n%s", response_text[:500])
+        sys.exit(1)
 
     if dry_run:
         print("\n--- DRY RUN ---")
@@ -171,23 +224,30 @@ TRENDING_KEYWORDS:
         print(f"\nHeadlines:")
         for h in headlines:
             print(f"  - {h['title']}")
+            print(f"    {h['url']}")
         print(f"\nTrending: {', '.join(trending_keywords)}")
         return
 
     # ── Save to database ─────────────────────────────────────────────
+    # Pass native Python objects — supabase-py handles JSONB serialization
     summary_data = {
         "date": today.isoformat(),
         "summary": summary,
-        "headlines": json.dumps(headlines),
-        "trending_keywords": json.dumps(trending_keywords),
+        "headlines": headlines,
+        "trending_keywords": trending_keywords,
         "article_count": article_count,
     }
 
-    supabase.table("daily_summaries").upsert(
+    logger.info("Saving summary to database...")
+    result = supabase.table("daily_summaries").upsert(
         summary_data, on_conflict="date"
     ).execute()
+    logger.info("Database upsert result: %d rows", len(result.data) if result.data else 0)
 
-    logger.info("✅ Daily summary saved for %s", today)
+    logger.info("Daily summary saved for %s", today)
+    logger.info("  Articles analyzed: %d", article_count)
+    logger.info("  Headlines: %d", len(headlines))
+    logger.info("  Trending keywords: %d", len(trending_keywords))
 
 
 if __name__ == "__main__":
@@ -196,4 +256,9 @@ if __name__ == "__main__":
     parser.add_argument("--dry-run", action="store_true", help="Print results without saving")
     args = parser.parse_args()
 
-    generate_daily_summary(hours=args.hours, dry_run=args.dry_run)
+    try:
+        generate_daily_summary(hours=args.hours, dry_run=args.dry_run)
+    except Exception as e:
+        logger.error("Fatal error generating daily summary: %s", e)
+        traceback.print_exc()
+        sys.exit(1)
