@@ -54,6 +54,24 @@ export default function NavHeader({
           }}
         >
           The AI News Intelligence Hub
+          <span
+            style={{
+              fontSize: "0.5rem",
+              fontFamily: "'JetBrains Mono', monospace",
+              fontStyle: "normal",
+              fontWeight: 700,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--copper)",
+              border: "1px solid var(--copper)",
+              borderRadius: "3px",
+              padding: "0.1rem 0.3rem",
+              marginLeft: "0.4rem",
+              verticalAlign: "super",
+            }}
+          >
+            Beta
+          </span>
         </Link>
 
         {/* Navigation — centered, all JetBrains Mono uppercase */}

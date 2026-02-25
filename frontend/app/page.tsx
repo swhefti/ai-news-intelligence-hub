@@ -339,6 +339,24 @@ export default function HomePage() {
           lineHeight: 1.2,
         }}>
           The AI News Intelligence Hub
+          <span
+            style={{
+              fontSize: "0.9rem",
+              fontFamily: "'JetBrains Mono', monospace",
+              fontStyle: "normal",
+              fontWeight: 700,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--copper)",
+              border: "1.5px solid var(--copper)",
+              borderRadius: "4px",
+              padding: "0.1rem 0.4rem",
+              marginLeft: "0.5rem",
+              verticalAlign: "super",
+            }}
+          >
+            Beta
+          </span>
         </h1>
 
         {/* Subtitle */}
