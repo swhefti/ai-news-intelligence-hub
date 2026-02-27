@@ -13,11 +13,42 @@ function getSupabase() {
   return supabase;
 }
 
+/* ------------------------------------------------------------------ */
+/* Paginated fetch — Supabase JS returns max 1000 rows by default.    */
+/* This helper loops with .range() to retrieve ALL matching rows.     */
+/* ------------------------------------------------------------------ */
+const PAGE_SIZE = 1000;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function fetchAll(
+  buildQuery: () => { range: (from: number, to: number) => PromiseLike<{ data: any; error: any }> }
+): Promise<{ data: Record<string, any>[]; error: unknown }> {
+  const allRows: Record<string, any>[] = [];
+  let offset = 0;
+
+  while (true) {
+    // Re-create the query each iteration so .range() applies cleanly
+    const { data, error } = await buildQuery().range(offset, offset + PAGE_SIZE - 1);
+
+    if (error) return { data: [], error };
+    if (!data || data.length === 0) break;
+
+    allRows.push(...data);
+
+    // If we got fewer rows than the page size, we've reached the end
+    if (data.length < PAGE_SIZE) break;
+    offset += PAGE_SIZE;
+  }
+
+  return { data: allRows, error: null };
+}
+
 export async function GET() {
   try {
     const supabase = getSupabase();
 
-    // Run all queries in parallel
+    // Run count queries (head:true, no row limit issue) in parallel
+    // with paginated full-data fetches
     const [
       articlesResult,
       chunksResult,
@@ -25,29 +56,33 @@ export async function GET() {
       chunksBySourceResult,
       dailyArticlesResult,
     ] = await Promise.all([
-      // Total article count
+      // Total article count (head-only, no pagination needed)
       supabase.from("articles").select("*", { count: "exact", head: true }),
 
-      // Total chunk count
+      // Total chunk count (head-only, no pagination needed)
       supabase.from("chunks").select("*", { count: "exact", head: true }),
 
-      // Articles per source with latest date and category
-      supabase
-        .from("articles")
-        .select("source_name, source_category, published_at"),
+      // Articles per source — paginated to get ALL rows
+      fetchAll(() =>
+        supabase
+          .from("articles")
+          .select("source_name, source_category, published_at")
+      ),
 
-      // Chunks per source
-      supabase.from("chunks").select("source_name"),
+      // Chunks per source — paginated to get ALL rows
+      fetchAll(() => supabase.from("chunks").select("source_name")),
 
-      // Articles from the last 14 days for daily chart
-      supabase
-        .from("articles")
-        .select("source_name, published_at")
-        .gte(
-          "published_at",
-          new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
-        )
-        .order("published_at", { ascending: true }),
+      // Articles from the last 14 days — paginated
+      fetchAll(() =>
+        supabase
+          .from("articles")
+          .select("source_name, published_at")
+          .gte(
+            "published_at",
+            new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
+          )
+          .order("published_at", { ascending: true })
+      ),
     ]);
 
     if (articlesResult.error || chunksResult.error || articlesBySourceResult.error || chunksBySourceResult.error || dailyArticlesResult.error) {
