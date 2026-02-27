@@ -153,11 +153,18 @@ DETAILED CONTENT FROM KEY ARTICLES:
 
 GENERATE THE FOLLOWING:
 
-1. SUMMARY
-Write a concise summary of today's most important AI news (4-7 sentences, one paragraph).
-Focus on the most significant developments. Be informative and direct.
+1. TITLE
+Write a catchy, newspaper-style headline for today's AI news digest.
+Focus on the single most important story, or combine at most 2 top stories.
+Keep it concise (under 80 characters). No quotes around it. Make it punchy and engaging.
 
-2. HEADLINES
+2. SUMMARY
+Write a summary of today's most important AI news (4-7 sentences).
+Organize by topic — separate each distinct topic into its own paragraph.
+Use blank lines between paragraphs. Each paragraph should cover one topic.
+Be informative and direct.
+
+3. HEADLINES
 Select the 3 most important/newsworthy stories from today.
 IMPORTANT RULES:
 - Only include genuinely significant stories published TODAY (within the last 24 hours)
@@ -166,14 +173,21 @@ IMPORTANT RULES:
 - Do NOT include older articles that were merely re-ingested today
 - Each headline needs the exact URL from the article list above
 
-3. TRENDING_KEYWORDS
+4. TRENDING_KEYWORDS
 List 3-7 keywords/topics that appear frequently in today's news.
 Use short terms like: "AI Agents", "OpenAI", "Regulation", "Healthcare AI", etc.
 
 FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
 
+TITLE:
+[Your catchy newspaper-style headline here]
+
 SUMMARY:
-[Your 4-7 sentence summary paragraph here]
+[Topic 1 paragraph here]
+
+[Topic 2 paragraph here]
+
+[Topic 3 paragraph here if needed]
 
 HEADLINES:
 - [Headline title 1] | [exact URL]
@@ -186,7 +200,7 @@ TRENDING_KEYWORDS:
     logger.info("Calling Claude to generate summary...")
     response = anthropic.messages.create(
         model="claude-sonnet-4-20250514",
-        max_tokens=1024,
+        max_tokens=1500,
         messages=[{"role": "user", "content": prompt}],
     )
 
@@ -194,9 +208,13 @@ TRENDING_KEYWORDS:
     logger.info("Got response from Claude (%d chars)", len(response_text))
 
     # ── Parse the response ───────────────────────────────────────────
+    title = ""
     summary = ""
     headlines = []
     trending_keywords = []
+
+    if "TITLE:" in response_text:
+        title = response_text.split("TITLE:")[1].split("SUMMARY:")[0].strip()
 
     if "SUMMARY:" in response_text:
         summary = response_text.split("SUMMARY:")[1].split("HEADLINES:")[0].strip()
@@ -218,6 +236,7 @@ TRENDING_KEYWORDS:
         trending_keywords = [k.strip() for k in keywords_line.split(",") if k.strip()]
 
     # ── Log results ──────────────────────────────────────────────────
+    logger.info("Parsed title: %s", title[:80] if title else "(none)")
     logger.info("Parsed summary: %d chars", len(summary))
     logger.info("Parsed headlines: %d", len(headlines))
     logger.info("Parsed trending keywords: %s", trending_keywords)
@@ -230,6 +249,7 @@ TRENDING_KEYWORDS:
         print("\n--- DRY RUN ---")
         print(f"Date: {today}")
         print(f"Articles: {article_count}")
+        print(f"\nTitle: {title}")
         print(f"\nSummary:\n{summary}")
         print(f"\nHeadlines:")
         for h in headlines:
@@ -242,6 +262,7 @@ TRENDING_KEYWORDS:
     # Pass native Python objects — supabase-py handles JSONB serialization
     summary_data = {
         "date": today.isoformat(),
+        "title": title or None,
         "summary": summary,
         "headlines": headlines,
         "trending_keywords": trending_keywords,

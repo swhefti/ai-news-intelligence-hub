@@ -17,6 +17,7 @@ interface Headline {
 interface DailySummary {
   id: string;
   date: string;
+  title?: string;
   summary: string;
   headlines: Headline[];
   trending_keywords: string[];
@@ -188,16 +189,36 @@ function DailySummarySection({
 
       {/* Summary card */}
       <div className="bp-card" style={{ padding: "1.5rem" }}>
-        {/* Summary text */}
-        <p style={{
-          fontSize: "0.95rem",
-          lineHeight: 1.8,
-          color: "var(--ink)",
+        {/* Title */}
+        {selected.title && (
+          <h3 style={{
+            fontSize: "1.15rem",
+            fontFamily: "'Georgia', serif",
+            fontWeight: 700,
+            fontStyle: "italic",
+            color: "var(--ink)",
+            marginBottom: "0.75rem",
+          }}>
+            {selected.title}
+          </h3>
+        )}
+
+        {/* Summary text — split into paragraphs by topic */}
+        <div style={{
           borderLeft: "3px solid var(--copper)",
           paddingLeft: "1rem",
         }}>
-          {selected.summary}
-        </p>
+          {selected.summary.split(/\n\n+/).map((paragraph, i) => (
+            <p key={i} style={{
+              fontSize: "0.95rem",
+              lineHeight: 1.8,
+              color: "var(--ink)",
+              marginBottom: i < selected.summary.split(/\n\n+/).length - 1 ? "0.75rem" : 0,
+            }}>
+              {paragraph}
+            </p>
+          ))}
+        </div>
 
         {/* Article count */}
         <p className="mono-label" style={{ fontSize: "0.7rem", marginTop: "1rem" }}>
