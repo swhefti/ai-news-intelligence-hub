@@ -29,7 +29,7 @@ export default function Footer() {
       <p>
         Built with Next.js, Supabase, pgvector, OpenAI &amp; Claude.
       </p>
-      <p style={{ marginTop: "1rem", fontSize: "0.72rem" }}>
+      <p style={{ marginTop: "1rem", fontWeight: 700 }}>
         &copy; 2026 Samuel Hefti &bull; Built as an AI Showcase &ndash; continuously growing.
       </p>
     </footer>
