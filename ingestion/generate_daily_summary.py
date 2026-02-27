@@ -153,16 +153,20 @@ DETAILED CONTENT FROM KEY ARTICLES:
 
 GENERATE THE FOLLOWING:
 
-1. TITLE
-Write a catchy, newspaper-style headline for today's AI news digest.
-Focus on the single most important story, or combine at most 2 top stories.
-Keep it concise (under 80 characters). No quotes around it. Make it punchy and engaging.
-
-2. SUMMARY
+1. SUMMARY
 Write a summary of today's most important AI news (4-7 sentences).
 Organize by topic — separate each distinct topic into its own paragraph.
 Use blank lines between paragraphs. Each paragraph should cover one topic.
-Be informative and direct.
+Be informative and direct. Put the most important topic FIRST.
+
+2. TITLE
+Now that the summary is written, create a catchy newspaper-style title for it.
+IMPORTANT RULES:
+- The title MUST reflect the first topic (or the first and second topics) of the summary above
+- Do NOT reference topics that only appear later in the summary
+- Do NOT copy a headline verbatim — make it original, engaging and creative
+- Maximum 20 words, but shorter is better
+- No quotes around it. Make it punchy, interesting and easy to read
 
 3. HEADLINES
 Select the 3 most important/newsworthy stories from today.
@@ -179,15 +183,15 @@ Use short terms like: "AI Agents", "OpenAI", "Regulation", "Healthcare AI", etc.
 
 FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
 
-TITLE:
-[Your catchy newspaper-style headline here]
-
 SUMMARY:
 [Topic 1 paragraph here]
 
 [Topic 2 paragraph here]
 
 [Topic 3 paragraph here if needed]
+
+TITLE:
+[Your catchy newspaper-style title here]
 
 HEADLINES:
 - [Headline title 1] | [exact URL]
@@ -213,11 +217,13 @@ TRENDING_KEYWORDS:
     headlines = []
     trending_keywords = []
 
-    if "TITLE:" in response_text:
-        title = response_text.split("TITLE:")[1].split("SUMMARY:")[0].strip()
-
     if "SUMMARY:" in response_text:
-        summary = response_text.split("SUMMARY:")[1].split("HEADLINES:")[0].strip()
+        # SUMMARY comes before TITLE in the response
+        summary = response_text.split("SUMMARY:")[1].split("TITLE:")[0].strip()
+
+    if "TITLE:" in response_text:
+        # TITLE comes between SUMMARY and HEADLINES
+        title = response_text.split("TITLE:")[1].split("HEADLINES:")[0].strip()
 
     if "HEADLINES:" in response_text:
         headlines_section = response_text.split("HEADLINES:")[1].split("TRENDING_KEYWORDS:")[0].strip()
@@ -226,10 +232,10 @@ TRENDING_KEYWORDS:
             if line.startswith("-") and "|" in line:
                 parts = line[1:].strip().split("|")
                 if len(parts) >= 2:
-                    title = parts[0].strip()
+                    h_title = parts[0].strip()
                     url = parts[-1].strip()  # use last part in case title has |
-                    if title and url.startswith("http"):
-                        headlines.append({"title": title, "url": url})
+                    if h_title and url.startswith("http"):
+                        headlines.append({"title": h_title, "url": url})
 
     if "TRENDING_KEYWORDS:" in response_text:
         keywords_line = response_text.split("TRENDING_KEYWORDS:")[1].strip().split("\n")[0]
