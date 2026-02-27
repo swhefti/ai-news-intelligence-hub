@@ -95,12 +95,21 @@ def generate_daily_summary(hours: int = 24, dry_run: bool = False):
     logger.info("Fetching articles from the last %d hours...", hours)
     articles_resp = (
         supabase.table("articles")
-        .select("id, title, url, source_name, keywords, summary")
+        .select("id, title, url, source_name, keywords, summary, published_at")
         .gte("fetched_at", cutoff)
         .execute()
     )
     articles = articles_resp.data or []
     article_count = len(articles)
+
+    # Filter to articles actually published within the last 24 hours
+    # (fetched_at tracks ingestion time, but published_at may be older)
+    recent_cutoff = (datetime.now(timezone.utc) - timedelta(hours=24)).isoformat()
+    recent_articles = [
+        a for a in articles
+        if a.get("published_at") and a["published_at"] >= recent_cutoff
+    ]
+    logger.info("Of %d fetched articles, %d were published in the last 24h", article_count, len(recent_articles))
 
     if article_count == 0:
         logger.info("No new articles in the last %d hours — skipping summary.", hours)
@@ -126,10 +135,11 @@ def generate_daily_summary(hours: int = 24, dry_run: bool = False):
         for c in chunks[:30]
     )
 
-    # Build article list for headline selection
+    # Build article list for headline selection — prefer recently published articles
+    headline_candidates = recent_articles if recent_articles else articles
     article_list = "\n".join(
         f"- {a['title']} | {a['source_name']} | {a['url']}"
-        for a in articles[:50]
+        for a in headline_candidates[:50]
     )
 
     # ── Generate summary with Claude ─────────────────────────────────
@@ -148,12 +158,12 @@ Write a concise summary of today's most important AI news (4-7 sentences, one pa
 Focus on the most significant developments. Be informative and direct.
 
 2. HEADLINES
-Select the most important/newsworthy stories from today.
+Select the 3 most important/newsworthy stories from today.
 IMPORTANT RULES:
-- Only include genuinely significant stories
-- Minimum 0, maximum 5 headlines
-- If there are no standout stories, include fewer or none
-- Do NOT force 5 headlines if quality isn't there
+- Only include genuinely significant stories published TODAY (within the last 24 hours)
+- Maximum 3 headlines — pick only the most relevant ones
+- If there are fewer than 3 standout stories, include fewer or none
+- Do NOT include older articles that were merely re-ingested today
 - Each headline needs the exact URL from the article list above
 
 3. TRENDING_KEYWORDS

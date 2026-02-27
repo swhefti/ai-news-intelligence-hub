@@ -219,7 +219,7 @@ function DailySummarySection({
               Top Headlines
             </h3>
             <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-              {selected.headlines.map((h, i) => (
+              {selected.headlines.slice(0, 3).map((h, i) => (
                 <li key={i}>
                   <a
                     href={h.url}

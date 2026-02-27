@@ -634,35 +634,10 @@ export default function GeneratePage() {
         {/* ---- FORM VIEW ---- */}
         {view === "form" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-            {/* Generate button */}
-            <div className="flex justify-center">
-              <button
-                type="button"
-                onClick={handleGenerate}
-                disabled={isGenerating}
-                style={{ fontSize: "1rem", padding: "0.8rem 2rem" }}
-              >
-                {isGenerating ? (
-                  <span className="flex items-center gap-2.5">
-                    <span className="spinner" style={{ width: "1rem", height: "1rem", borderColor: "rgba(255,255,255,0.3)", borderTopColor: "white" }} />
-                    Generating...
-                  </span>
-                ) : (
-                  "Generate Briefing"
-                )}
-              </button>
-            </div>
-
             <KeywordFilter
               selectedKeywords={keywords}
               onToggle={toggleKeyword}
               onClearAll={() => setKeywords([])}
-            />
-
-            <TimeSlider
-              displayValue={sliderIdx}
-              onDrag={setSliderIdx}
-              onCommit={() => setCommittedIdx(sliderIdx)}
             />
 
             <div className="flex gap-4 justify-center">
@@ -685,6 +660,31 @@ export default function GeneratePage() {
                 onChange={setLanguage}
               />
             </div>
+
+            {/* Generate button */}
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={handleGenerate}
+                disabled={isGenerating}
+                style={{ fontSize: "1rem", padding: "0.8rem 2rem" }}
+              >
+                {isGenerating ? (
+                  <span className="flex items-center gap-2.5">
+                    <span className="spinner" style={{ width: "1rem", height: "1rem", borderColor: "rgba(255,255,255,0.3)", borderTopColor: "white" }} />
+                    Generating...
+                  </span>
+                ) : (
+                  "Generate Briefing"
+                )}
+              </button>
+            </div>
+
+            <TimeSlider
+              displayValue={sliderIdx}
+              onDrag={setSliderIdx}
+              onCommit={() => setCommittedIdx(sliderIdx)}
+            />
 
             {error && <div className="error-box">{error}</div>}
 

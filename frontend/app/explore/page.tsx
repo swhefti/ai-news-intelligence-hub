@@ -295,9 +295,9 @@ function TimeSlider({
   onCommit: () => void;
 }) {
   return (
-    <div className="flex items-center justify-center gap-4" style={{ maxWidth: "24rem", margin: "0 auto" }}>
-      <span style={{ fontSize: "0.875rem", color: "var(--muted-foreground)", whiteSpace: "nowrap", minWidth: "80px", textAlign: "right" }}>
-        Last{" "}
+    <div className="flex items-center justify-center gap-4" style={{ maxWidth: "28rem", margin: "0 auto" }}>
+      <span style={{ fontSize: "0.875rem", color: "var(--muted-foreground)", whiteSpace: "nowrap", textAlign: "right" }}>
+        Sources from the last{" "}
         <span className="mono-label">
           {displayValue} day{displayValue !== 1 ? "s" : ""}
         </span>
@@ -686,6 +686,23 @@ export default function ExplorePage() {
             {data.keywords.length >= 5 ? (
               <div className="relative">
                 <WordCloud words={data.keywords} onWordClick={handleWordClick} />
+
+                <span
+                  className="mono-label"
+                  style={{
+                    position: "absolute",
+                    bottom: "0.5rem",
+                    left: "0.5rem",
+                    fontSize: "0.75rem",
+                    color: "var(--muted-foreground)",
+                    background: "var(--paper)",
+                    padding: "0.2rem 0.5rem",
+                    borderRadius: "4px",
+                    border: "1px solid var(--border)",
+                  }}
+                >
+                  {data.totalArticles} articles
+                </span>
 
                 <button
                   type="button"
