@@ -157,6 +157,32 @@ RSS_FEEDS = [
         "category": "community",
         "priority": "low"
     },
+
+    # Newsletters & Independent Analysis
+    {
+        "name": "Import AI",
+        "url": "https://importai.substack.com/feed",
+        "category": "community",
+        "priority": "high"
+    },
+    {
+        "name": "The Gradient",
+        "url": "https://thegradient.pub/rss/",
+        "category": "research",
+        "priority": "high"
+    },
+    {
+        "name": "AI Snake Oil",
+        "url": "https://aisnakeoil.substack.com/feed",
+        "category": "community",
+        "priority": "high"
+    },
+    {
+        "name": "Wired AI",
+        "url": "https://www.wired.com/feed/tag/ai/latest/rss",
+        "category": "tech_news",
+        "priority": "high"
+    },
 ]
 
 # =============================================================================
@@ -229,7 +255,7 @@ API_CONFIG = APIConfig()
 @dataclass
 class IngestionConfig:
     """Configuration for the ingestion process."""
-    max_articles_per_feed: int = 50  # Limit per feed per run
+    max_articles_per_feed: int = 25  # Limit per feed per run (cap to balance sources)
     days_to_keep: int = 90  # How long to retain articles
     update_interval_hours: int = 6  # How often to check for new articles
     

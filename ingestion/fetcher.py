@@ -20,6 +20,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from config import RSS_FEEDS, INGESTION_CONFIG
+from taxonomy import TAXONOMY
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -27,6 +28,12 @@ logger = logging.getLogger(__name__)
 
 # Minimum content length to consider an article "complete" from RSS alone
 MIN_RSS_CONTENT_LENGTH = 500
+
+# Build a flat set of all taxonomy terms (lowercase) for relevance scoring
+_RELEVANCE_TERMS: set[str] = set()
+for _synonyms in TAXONOMY.values():
+    for _term in _synonyms:
+        _RELEVANCE_TERMS.add(_term.lower())
 
 # =============================================================================
 # DATA STRUCTURES
@@ -184,6 +191,18 @@ def fetch_full_content(url: str, timeout: int = 15) -> Optional[str]:
         # Hacker News links
         elif 'ycombinator.com' in domain:
             article = soup.find('article') or soup.find('main')
+        # Substack (Import AI, AI Snake Oil, etc.)
+        elif 'substack.com' in domain:
+            article = soup.find('div', class_='body') or soup.find('div', class_='post-content') or soup.find('article')
+        # Wired
+        elif 'wired.com' in domain:
+            article = soup.find('div', class_='body__inner-container') or soup.find('article')
+        # The Gradient
+        elif 'thegradient.pub' in domain:
+            article = soup.find('div', class_='post-content') or soup.find('article')
+        # Reuters
+        elif 'reuters.com' in domain:
+            article = soup.find('div', class_='article-body__content') or soup.find('article')
 
         # Generic fallback selectors
         if not article:
@@ -321,9 +340,33 @@ def parse_feed_entry(entry: dict, source: dict, fetch_full: bool = True) -> Opti
         return None
 
 
+def _score_entry_relevance(entry: dict) -> int:
+    """
+    Score an RSS entry by relevance to our keyword taxonomy.
+
+    Checks title and summary against all taxonomy terms.
+    Higher score = more relevant to our tracked topics.
+    Returns count of matching terms (0 = no known-topic matches).
+    """
+    text = (
+        (entry.get("title", "") or "")
+        + " "
+        + (entry.get("summary", "") or "")
+    ).lower()
+
+    score = 0
+    for term in _RELEVANCE_TERMS:
+        if term in text:
+            score += 1
+    return score
+
+
 def fetch_feed(source: dict, max_articles: int = None, fetch_full: bool = True) -> list[Article]:
     """
     Fetch and parse articles from a single RSS feed.
+
+    When the feed has more entries than max_articles, entries are ranked
+    by relevance to our keyword taxonomy so we keep the most topical ones.
 
     Args:
         source: Source configuration dict with 'name', 'url', 'category', 'priority'
@@ -343,9 +386,18 @@ def fetch_feed(source: dict, max_articles: int = None, fetch_full: bool = True) 
         if feed.bozo and feed.bozo_exception:
             logger.warning(f"Feed parsing warning for {source['name']}: {feed.bozo_exception}")
 
+        entries = feed.entries
+
+        # If more entries than our cap, rank by relevance and keep the best
+        if len(entries) > max_articles:
+            logger.info(f"  {source['name']} has {len(entries)} entries, selecting top {max_articles} by relevance")
+            scored = [(e, _score_entry_relevance(e)) for e in entries]
+            scored.sort(key=lambda x: x[1], reverse=True)
+            entries = [e for e, _ in scored[:max_articles]]
+
         articles = []
         skipped_empty = 0
-        for entry in feed.entries[:max_articles]:
+        for entry in entries:
             article = parse_feed_entry(entry, source, fetch_full=fetch_full)
             if article and article.content:  # Only include articles with content
                 articles.append(article)
