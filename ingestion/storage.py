@@ -381,7 +381,7 @@ class SupabaseStorage:
     # Maintenance
     # -------------------------------------------------------------------------
 
-    def cleanup_old_articles(self, days_to_keep: int = 60) -> int:
+    def cleanup_old_articles(self, days_to_keep: int = 90) -> int:
         """
         Delete articles (and their chunks via CASCADE) older than days_to_keep.
 
@@ -551,24 +551,30 @@ def get_storage(use_local: bool = False) -> SupabaseStorage | LocalStorage:
 # =============================================================================
 
 if __name__ == "__main__":
-    print("\n" + "="*60)
+    print("
+" + "="*60)
     print("Database Setup Instructions")
-    print("="*60 + "\n")
+    print("="*60 + "
+")
     
     print("To set up your Supabase database, run the following SQL")
-    print("in your Supabase SQL Editor:\n")
+    print("in your Supabase SQL Editor:
+")
     print("-"*60)
     print(SCHEMA_SQL)
     print("-"*60)
     
-    print("\nAfter running the SQL, set these environment variables:")
+    print("
+After running the SQL, set these environment variables:")
     print("  SUPABASE_URL=your-project-url")
     print("  SUPABASE_KEY=your-anon-or-service-key")
     
     # Test local storage
-    print("\n" + "="*60)
+    print("
+" + "="*60)
     print("Testing Local Storage")
-    print("="*60 + "\n")
+    print("="*60 + "
+")
     
     storage = LocalStorage(data_dir="./test_data")
     
