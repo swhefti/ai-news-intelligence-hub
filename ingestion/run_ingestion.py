@@ -213,6 +213,23 @@ def run_ingestion(
         stats["errors"].append(f"Chunk storage error: {e}")
     
     # -------------------------------------------------------------------------
+    # Step 8: Clean up old articles to keep DB within free-tier limits
+    # -------------------------------------------------------------------------
+    if hasattr(storage, 'cleanup_old_articles'):
+        print("\n🧹 Cleaning up old articles...")
+        try:
+            days = INGESTION_CONFIG.days_to_keep
+            deleted = storage.cleanup_old_articles(days_to_keep=days)
+            stats["articles_deleted"] = deleted
+            if deleted:
+                print(f"   ✓ Deleted {deleted} articles older than {days} days (chunks cascaded)")
+            else:
+                print(f"   ✓ No articles older than {days} days to remove")
+        except Exception as e:
+            logger.warning(f"Cleanup failed (non-fatal): {e}")
+            stats["articles_deleted"] = 0
+
+    # -------------------------------------------------------------------------
     # Done!
     # -------------------------------------------------------------------------
     end_time = datetime.now()
@@ -231,6 +248,7 @@ def run_ingestion(
     print(f"   • Chunks created: {stats['chunks_created']}")
     print(f"   • Chunks embedded: {stats['chunks_embedded']}")
     print(f"   • Chunks stored: {stats['chunks_stored']}")
+    print(f"   • Articles cleaned up: {stats.get('articles_deleted', 0)}")
     print(f"   • Duration: {duration:.1f} seconds")
 
     if stats["errors"]:
