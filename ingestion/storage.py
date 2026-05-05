@@ -377,6 +377,34 @@ class SupabaseStorage:
             logger.error(f"Failed to get stats: {e}")
             return {}
 
+    # -------------------------------------------------------------------------
+    # Maintenance
+    # -------------------------------------------------------------------------
+
+    def cleanup_old_articles(self, days_to_keep: int = 60) -> int:
+        """
+        Delete articles (and their chunks via CASCADE) older than days_to_keep.
+
+        Returns the number of articles deleted.
+        """
+        from datetime import timedelta
+        client = self._get_client()
+        cutoff = (datetime.utcnow() - timedelta(days=days_to_keep)).isoformat()
+
+        try:
+            result = (
+                client.table("articles")
+                .delete()
+                .lt("published_at", cutoff)
+                .execute()
+            )
+            deleted = len(result.data) if result.data else 0
+            logger.info(f"Deleted {deleted} articles older than {days_to_keep} days (chunks cascaded)")
+            return deleted
+        except Exception as e:
+            logger.error(f"Failed to clean up old articles: {e}")
+            return 0
+
 
 # =============================================================================
 # LOCAL STORAGE (for testing without Supabase)
