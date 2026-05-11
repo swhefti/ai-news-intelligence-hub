@@ -256,7 +256,7 @@ API_CONFIG = APIConfig()
 class IngestionConfig:
     """Configuration for the ingestion process."""
     max_articles_per_feed: int = 25  # Limit per feed per run (cap to balance sources)
-    days_to_keep: int = 30  # How long to retain articles (free-tier storage limit)
+    days_to_keep: int = 90  # How long to retain articles (free-tier storage limit)
     update_interval_hours: int = 6  # How often to check for new articles
     
 INGESTION_CONFIG = IngestionConfig()
