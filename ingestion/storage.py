@@ -383,27 +383,42 @@ class SupabaseStorage:
 
     def cleanup_old_articles(self, days_to_keep: int = 90) -> int:
         """
-        Delete articles (and their chunks via CASCADE) older than days_to_keep.
+        Delete articles and their chunks older than days_to_keep.
+
+        Deletes in batches of 20 to avoid Supabase statement timeouts.
+        Chunks are deleted first (explicit) then articles, since CASCADE
+        is unreliable under the anon key with large deletes.
 
         Returns the number of articles deleted.
         """
+        import time
         from datetime import timedelta
         client = self._get_client()
         cutoff = (datetime.utcnow() - timedelta(days=days_to_keep)).isoformat()
 
-        try:
-            result = (
-                client.table("articles")
-                .delete()
-                .lt("published_at", cutoff)
-                .execute()
-            )
-            deleted = len(result.data) if result.data else 0
-            logger.info(f"Deleted {deleted} articles older than {days_to_keep} days (chunks cascaded)")
-            return deleted
-        except Exception as e:
-            logger.error(f"Failed to clean up old articles: {e}")
-            return 0
+        total_deleted = 0
+        errors = 0
+        while True:
+            try:
+                rows = client.table("articles").select("id").lt("published_at", cutoff).limit(20).execute()
+                ids = [r["id"] for r in (rows.data or [])]
+                if not ids:
+                    break
+                client.table("chunks").delete().in_("article_id", ids).execute()
+                result = client.table("articles").delete().in_("id", ids).execute()
+                total_deleted += len(result.data) if result.data else len(ids)
+                errors = 0
+                time.sleep(0.1)
+            except Exception as e:
+                errors += 1
+                logger.warning(f"Cleanup batch error (attempt {errors}): {e}")
+                if errors > 5:
+                    logger.error("Too many cleanup errors, stopping early")
+                    break
+                time.sleep(2)
+
+        logger.info(f"Deleted {total_deleted} articles older than {days_to_keep} days")
+        return total_deleted
 
 
 # =============================================================================
