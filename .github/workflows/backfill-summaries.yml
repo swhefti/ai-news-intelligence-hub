@@ -1,0 +1,44 @@
+name: Backfill Daily Summaries
+
+on:
+  workflow_dispatch:
+    inputs:
+      dates:
+        description: "Comma-separated dates to backfill (YYYY-MM-DD), e.g. 2026-05-06,2026-05-07"
+        required: true
+        default: "2026-05-06,2026-05-07,2026-05-08,2026-05-09,2026-05-10"
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ingestion
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: ingestion/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Backfill summaries for each date
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DATES: ${{ github.event.inputs.dates }}
+        run: |
+          IFS=',' read -ra DATE_LIST <<< "$DATES"
+          for date in "${DATE_LIST[@]}"; do
+            date=$(echo "$date" | tr -d ' ')
+            echo "=== Generating summary for $date ==="
+            python generate_daily_summary.py --date "$date"
+          done

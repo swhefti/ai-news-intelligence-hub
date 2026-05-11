@@ -58,7 +58,7 @@ def ensure_table_exists(supabase):
         return True  # optimistically continue
 
 
-def generate_daily_summary(hours: int = 24, dry_run: bool = False):
+def generate_daily_summary(hours: int = 24, dry_run: bool = False, target_date: str = None):
     """Generate a daily summary from recently ingested articles."""
 
     # Lazy imports so --help works without credentials
@@ -88,44 +88,73 @@ def generate_daily_summary(hours: int = 24, dry_run: bool = False):
     if not ensure_table_exists(supabase):
         sys.exit(1)
 
-    today = datetime.now(timezone.utc).date()
-    cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
+    if target_date:
+        from datetime import date as date_type
+        today = datetime.strptime(target_date, "%Y-%m-%d").date()
+        day_start = datetime(today.year, today.month, today.day, tzinfo=timezone.utc).isoformat()
+        day_end = (datetime(today.year, today.month, today.day, tzinfo=timezone.utc) + timedelta(days=1)).isoformat()
+        logger.info("Backfill mode: generating summary for %s", today)
 
-    # ── Fetch recent articles ────────────────────────────────────────
-    logger.info("Fetching articles from the last %d hours...", hours)
-    articles_resp = (
-        supabase.table("articles")
-        .select("id, title, url, source_name, keywords, summary, published_at")
-        .gte("fetched_at", cutoff)
-        .execute()
-    )
-    articles = articles_resp.data or []
-    article_count = len(articles)
+        # ── Fetch articles published on the target date ──────────────
+        articles_resp = (
+            supabase.table("articles")
+            .select("id, title, url, source_name, keywords, summary, published_at")
+            .gte("published_at", day_start)
+            .lt("published_at", day_end)
+            .execute()
+        )
+        articles = articles_resp.data or []
+        article_count = len(articles)
+        recent_articles = articles
 
-    # Filter to articles actually published within the last 24 hours
-    # (fetched_at tracks ingestion time, but published_at may be older)
-    recent_cutoff = (datetime.now(timezone.utc) - timedelta(hours=24)).isoformat()
-    recent_articles = [
-        a for a in articles
-        if a.get("published_at") and a["published_at"] >= recent_cutoff
-    ]
-    logger.info("Of %d fetched articles, %d were published in the last 24h", article_count, len(recent_articles))
+        chunks_resp = (
+            supabase.table("chunks")
+            .select("text, article_title, article_url, source_name")
+            .gte("created_at", day_start)
+            .lt("created_at", day_end)
+            .limit(50)
+            .execute()
+        )
+    else:
+        today = datetime.now(timezone.utc).date()
+        cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
+
+        # ── Fetch recent articles ────────────────────────────────────────
+        logger.info("Fetching articles from the last %d hours...", hours)
+        articles_resp = (
+            supabase.table("articles")
+            .select("id, title, url, source_name, keywords, summary, published_at")
+            .gte("fetched_at", cutoff)
+            .execute()
+        )
+        articles = articles_resp.data or []
+        article_count = len(articles)
+
+        # Filter to articles actually published within the last 24 hours
+        # (fetched_at tracks ingestion time, but published_at may be older)
+        recent_cutoff = (datetime.now(timezone.utc) - timedelta(hours=24)).isoformat()
+        recent_articles = [
+            a for a in articles
+            if a.get("published_at") and a["published_at"] >= recent_cutoff
+        ]
+        logger.info("Of %d fetched articles, %d were published in the last 24h", article_count, len(recent_articles))
+
+        chunks_resp = (
+            supabase.table("chunks")
+            .select("text, article_title, article_url, source_name")
+            .gte("created_at", cutoff)
+            .limit(50)
+            .execute()
+        )
 
     if article_count == 0:
-        logger.info("No new articles in the last %d hours — skipping summary.", hours)
+        logger.info("No articles found for %s — skipping summary.", today)
         return
 
-    logger.info("Found %d articles in the last %d hours", article_count, hours)
+    logger.info("Found %d articles for %s", article_count, today)
 
     # ── Fetch chunks for detailed context ────────────────────────────
     logger.info("Fetching chunks for context...")
-    chunks_resp = (
-        supabase.table("chunks")
-        .select("text, article_title, article_url, source_name")
-        .gte("created_at", cutoff)
-        .limit(50)
-        .execute()
-    )
     chunks = chunks_resp.data or []
     logger.info("Got %d chunks for context", len(chunks))
 
@@ -291,10 +320,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate daily AI news summary")
     parser.add_argument("--hours", type=int, default=24, help="Hours to look back (default: 24)")
     parser.add_argument("--dry-run", action="store_true", help="Print results without saving")
+    parser.add_argument("--date", help="Backfill: generate summary for a specific date (YYYY-MM-DD)")
     args = parser.parse_args()
 
     try:
-        generate_daily_summary(hours=args.hours, dry_run=args.dry_run)
+        generate_daily_summary(hours=args.hours, dry_run=args.dry_run, target_date=args.date)
     except Exception as e:
         logger.error("Fatal error generating daily summary: %s", e)
         traceback.print_exc()
