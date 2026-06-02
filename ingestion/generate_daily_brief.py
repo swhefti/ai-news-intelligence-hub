@@ -43,6 +43,18 @@ CLAUDE_MODEL = "claude-sonnet-4-5"
 IMAGE_MODEL = "gpt-image-1-mini"
 SIMILARITY_THRESHOLD = 0.8  # cosine similarity > 0.8  ==  distance < 0.2
 PRIORITY_WEIGHTS = {"high": 3, "medium": 2, "low": 1}
+
+# Only consider stories published within this many days (a front-page "brief"
+# should be current, not re-ingested old posts). Tighten to 1 for stricter
+# same-day freshness.
+DEFAULT_MAX_AGE_DAYS = 2
+
+# Recency weighting: among in-window stories, fresher ones rank higher. The
+# bonus decays linearly from RECENCY_WEIGHT (just published) to 0 at the edge
+# of RECENCY_WINDOW_HOURS, acting as a strong tie-breaker without overriding a
+# genuinely bigger multi-source story.
+RECENCY_WINDOW_HOURS = 48
+RECENCY_WEIGHT = 4.0
 IMAGE_STYLE = (
     "flat design editorial illustration, muted color palette, no text, "
     "geometric shapes, minimal"
@@ -95,23 +107,30 @@ def cosine_similarity(a, b):
 # Step 1 — cluster recent articles into ranked stories
 # =============================================================================
 
-def fetch_recent_articles(supabase, hours, target_date):
-    """Return articles ingested in the window (24h, or a specific date)."""
+def fetch_recent_articles(supabase, target_date, max_age_days):
+    """
+    Return articles *published* within the recency window.
+
+    Filtering on published_at — not fetched_at — is what keeps the brief to
+    genuinely current stories. Old posts that merely got re-ingested today have
+    an old published_at and are excluded (NULL published_at is also excluded by
+    the range filter, which is what we want for a "news" front page).
+    """
     cols = "id, title, url, summary, source_name, source_priority, published_at, fetched_at"
     if target_date:
         day = datetime.strptime(target_date, "%Y-%m-%d").date()
-        start = datetime(day.year, day.month, day.day, tzinfo=timezone.utc)
-        end = start + timedelta(days=1)
-        resp = (
-            supabase.table("articles")
-            .select(cols)
-            .gte("fetched_at", start.isoformat())
-            .lt("fetched_at", end.isoformat())
-            .execute()
-        )
+        published_until = datetime(day.year, day.month, day.day, tzinfo=timezone.utc) + timedelta(days=1)
     else:
-        cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
-        resp = supabase.table("articles").select(cols).gte("fetched_at", cutoff).execute()
+        published_until = datetime.now(timezone.utc)
+    published_since = published_until - timedelta(days=max_age_days)
+
+    resp = (
+        supabase.table("articles")
+        .select(cols)
+        .gte("published_at", published_since.isoformat())
+        .lt("published_at", published_until.isoformat())
+        .execute()
+    )
     return resp.data or []
 
 
@@ -185,18 +204,47 @@ def cluster_articles(articles, embeddings):
     return clusters
 
 
-def score_cluster(cluster):
-    """Score = frequency (cluster size) + summed source-priority weight."""
+def parse_published(value):
+    """Parse an ISO published_at into an aware datetime, or None."""
+    if not value:
+        return None
+    try:
+        dt = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
+def cluster_age_hours(cluster, now):
+    """Age in hours of the cluster's most recent article (large if unknown)."""
+    ages = [
+        (now - dt).total_seconds() / 3600.0
+        for a in cluster["articles"]
+        if (dt := parse_published(a.get("published_at")))
+    ]
+    return min(ages) if ages else 1e9
+
+
+def score_cluster(cluster, now):
+    """Score = frequency + source-priority weight + recency bonus.
+
+    Frequency and priority capture relevance (how widely/credibly the story is
+    covered); the recency bonus favours the freshest stories within the window.
+    """
     frequency = len(cluster["articles"])
     priority = sum(
         PRIORITY_WEIGHTS.get((a.get("source_priority") or "low").lower(), 1)
         for a in cluster["articles"]
     )
-    return frequency + priority
+    age_h = cluster_age_hours(cluster, now)
+    recency_bonus = max(0.0, (RECENCY_WINDOW_HOURS - age_h) / RECENCY_WINDOW_HOURS) * RECENCY_WEIGHT
+    return frequency + priority + recency_bonus
 
 
-def top_clusters(clusters, n=3):
-    ranked = sorted(clusters, key=score_cluster, reverse=True)
+def top_clusters(clusters, now, n=3):
+    ranked = sorted(clusters, key=lambda c: score_cluster(c, now), reverse=True)
     return ranked[:n]
 
 
@@ -297,7 +345,7 @@ def generate_and_upload_image(openai_client, supabase, image_prompt, brief_date,
 # Orchestration
 # =============================================================================
 
-def generate_daily_brief(hours=24, dry_run=False, target_date=None):
+def generate_daily_brief(max_age_days=DEFAULT_MAX_AGE_DAYS, dry_run=False, target_date=None):
     from supabase import create_client
     from anthropic import Anthropic
     from openai import OpenAI
@@ -330,29 +378,37 @@ def generate_daily_brief(hours=24, dry_run=False, target_date=None):
     anthropic = Anthropic(api_key=anthropic_key)
     openai_client = OpenAI(api_key=openai_key)
 
+    now = datetime.now(timezone.utc)
     brief_date = (
         datetime.strptime(target_date, "%Y-%m-%d").date()
-        if target_date else datetime.now(timezone.utc).date()
+        if target_date else now.date()
     )
     brief_date_str = brief_date.isoformat()
 
     # ── Step 1: cluster ──────────────────────────────────────────────
-    logger.info("Fetching recent articles for %s...", brief_date_str)
-    articles = fetch_recent_articles(supabase, hours, target_date)
+    logger.info(
+        "Fetching articles published within %d day(s) for %s...", max_age_days, brief_date_str
+    )
+    articles = fetch_recent_articles(supabase, target_date, max_age_days)
     if not articles:
-        logger.info("No articles ingested for %s — skipping brief.", brief_date_str)
+        logger.info(
+            "No articles published within %d day(s) of %s — skipping brief.",
+            max_age_days, brief_date_str,
+        )
         return
 
-    logger.info("Found %d articles; fetching embeddings...", len(articles))
+    logger.info("Found %d recent articles; fetching embeddings...", len(articles))
     embeddings = fetch_article_embeddings(supabase, [a["id"] for a in articles])
     clusters = cluster_articles(articles, embeddings)
-    selected = top_clusters(clusters, n=3)
+    selected = top_clusters(clusters, now, n=3)
     logger.info("Formed %d clusters; using top %d.", len(clusters), len(selected))
 
     # ── Steps 2-4 per cluster ────────────────────────────────────────
     for rank, cluster in enumerate(selected, start=1):
         logger.info(
-            "Rank %d: %d article(s), score %d", rank, len(cluster["articles"]), score_cluster(cluster)
+            "Rank %d: %d article(s), score %.1f, freshest %.0fh old",
+            rank, len(cluster["articles"]), score_cluster(cluster, now),
+            cluster_age_hours(cluster, now),
         )
         brief = generate_brief_text(anthropic, cluster)
         source_article_ids = [a["id"] for a in cluster["articles"]]
@@ -365,7 +421,10 @@ def generate_daily_brief(hours=24, dry_run=False, target_date=None):
             print(f"Title: {brief['title']}")
             print(f"Body:  {brief['body']}")
             print(f"Image prompt: {brief['image_prompt']}")
-            print(f"Sources: {', '.join(source_titles)}")
+            print("Sources:")
+            for a in cluster["articles"]:
+                published = (a.get("published_at") or "?")[:10]
+                print(f"  - [{published}] {a.get('source_name')}: {a['title']}")
             continue
 
         image_url = generate_and_upload_image(
@@ -394,13 +453,18 @@ def generate_daily_brief(hours=24, dry_run=False, target_date=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate the daily AI news brief")
-    parser.add_argument("--hours", type=int, default=24, help="Hours to look back (default: 24)")
+    parser.add_argument(
+        "--max-age-days", type=int, default=DEFAULT_MAX_AGE_DAYS,
+        help="Only include stories published within this many days (default: 2)",
+    )
     parser.add_argument("--date", help="Backfill: generate for a specific date (YYYY-MM-DD)")
     parser.add_argument("--dry-run", action="store_true", help="Print results without writing")
     args = parser.parse_args()
 
     try:
-        generate_daily_brief(hours=args.hours, dry_run=args.dry_run, target_date=args.date)
+        generate_daily_brief(
+            max_age_days=args.max_age_days, dry_run=args.dry_run, target_date=args.date
+        )
     except Exception as e:
         logger.error("Fatal error generating daily brief: %s", e)
         traceback.print_exc()
