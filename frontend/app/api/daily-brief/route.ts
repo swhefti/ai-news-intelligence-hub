@@ -50,6 +50,8 @@ export async function GET(request: NextRequest) {
       ...b,
       source_article_ids: parseJsonField<string[]>(b.source_article_ids, []),
       source_titles: parseJsonField<string[]>(b.source_titles, []),
+      source_names: parseJsonField<string[]>(b.source_names, []),
+      source_urls: parseJsonField<string[]>(b.source_urls, []),
     }));
 
     return NextResponse.json(normalized);

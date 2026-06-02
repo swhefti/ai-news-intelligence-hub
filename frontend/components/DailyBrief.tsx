@@ -16,6 +16,8 @@ interface Brief {
   image_prompt?: string;
   source_article_ids: string[];
   source_titles: string[];
+  source_names: string[];
+  source_urls: string[];
 }
 
 /* ------------------------------------------------------------------ */
@@ -31,37 +33,115 @@ function formatDate(dateString: string): string {
   });
 }
 
-/** Derive a small set of unique source names from the cluster's titles. */
-function sourceNames(brief: Brief): string[] {
-  // source_titles are article titles; show how many sources backed the story.
-  const count = brief.source_titles?.length || 0;
-  if (count === 0) return [];
-  return [`${count} ${count === 1 ? "source" : "sources"}`];
-}
-
 /* ------------------------------------------------------------------ */
-/* Source pills                                                        */
+/* Sources — clickable count that expands to the contributing headlines */
 /* ------------------------------------------------------------------ */
 
-function SourceTags({ labels }: { labels: string[] }) {
-  if (labels.length === 0) return null;
+function Sources({ brief }: { brief: Brief }) {
+  const [open, setOpen] = useState(false);
+  const titles = brief.source_titles || [];
+  const names = brief.source_names || [];
+  const urls = brief.source_urls || [];
+  if (titles.length === 0) return null;
+
+  const items = titles.map((title, i) => ({
+    title,
+    name: names[i] || "",
+    url: urls[i] || "",
+  }));
+
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", marginTop: "0.75rem" }}>
-      {labels.map((label, i) => (
+    <div style={{ marginTop: "0.75rem", clear: "both" }}>
+      <span
+        role="button"
+        tabIndex={0}
+        aria-expanded={open}
+        className="mono-label"
+        onClick={() => setOpen((o) => !o)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen((o) => !o);
+          }
+        }}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.35rem",
+          fontSize: "0.68rem",
+          padding: "0.15rem 0.5rem",
+          border: "1px solid var(--border)",
+          borderRadius: "4px",
+          background: "white",
+          cursor: "pointer",
+          userSelect: "none",
+        }}
+      >
+        {titles.length} {titles.length === 1 ? "source" : "sources"}
         <span
-          key={i}
-          className="mono-label"
+          aria-hidden
           style={{
-            fontSize: "0.68rem",
-            padding: "0.15rem 0.5rem",
-            border: "1px solid var(--border)",
-            borderRadius: "4px",
-            background: "white",
+            fontSize: "0.6rem",
+            transform: open ? "rotate(180deg)" : "none",
+            transition: "transform 0.15s ease",
           }}
         >
-          {label}
+          ▾
         </span>
-      ))}
+      </span>
+
+      {open && (
+        <ul
+          style={{
+            listStyle: "none",
+            padding: 0,
+            margin: "0.5rem 0 0",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+          }}
+        >
+          {items.map((item, i) => (
+            <li
+              key={i}
+              style={{
+                paddingLeft: "0.6rem",
+                borderLeft: "2px solid var(--copper)",
+              }}
+            >
+              {/* Outlet name (or article title if no outlet) — links to the article */}
+              {item.url ? (
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontSize: "0.8rem",
+                    fontWeight: 600,
+                    color: "var(--ink)",
+                    textDecoration: "none",
+                    transition: "color 0.15s ease",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = "var(--copper)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "var(--ink)"; }}
+                >
+                  {item.name || item.title}
+                </a>
+              ) : (
+                <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--ink)" }}>
+                  {item.name || item.title}
+                </span>
+              )}
+              {/* Article headline as secondary context when we have a distinct outlet name */}
+              {item.name && item.title && item.name !== item.title && (
+                <div style={{ fontSize: "0.72rem", lineHeight: 1.4, color: "var(--muted-foreground)", marginTop: "0.1rem" }}>
+                  {item.title}
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -98,7 +178,7 @@ function MainStory({ brief }: { brief: Brief }) {
         <p style={{ fontSize: "0.95rem", lineHeight: 1.7, color: "var(--muted-foreground)" }}>
           {brief.body}
         </p>
-        <SourceTags labels={sourceNames(brief)} />
+        <Sources brief={brief} />
       </div>
       {brief.image_url && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -122,8 +202,10 @@ function MainStory({ brief }: { brief: Brief }) {
 }
 
 function SubStory({ brief }: { brief: Brief }) {
+  // Float the image so the title/body wrap to its right and then continue
+  // underneath it — filling the space rather than leaving a gap below it.
   return (
-    <div className="bp-card" style={{ padding: "1.25rem", display: "flex", gap: "1rem" }}>
+    <div className="bp-card" style={{ padding: "1.25rem" }}>
       {brief.image_url && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -132,33 +214,33 @@ function SubStory({ brief }: { brief: Brief }) {
           width={120}
           height={120}
           style={{
+            float: "left",
             width: "120px",
             height: "120px",
-            flexShrink: 0,
+            marginRight: "1rem",
+            marginBottom: "0.5rem",
             objectFit: "cover",
             borderRadius: "8px",
             border: "1px solid var(--border)",
           }}
         />
       )}
-      <div style={{ minWidth: 0 }}>
-        <h3
-          style={{
-            fontSize: "1.05rem",
-            fontFamily: "'Georgia', serif",
-            fontWeight: 600,
-            lineHeight: 1.3,
-            color: "var(--ink)",
-            marginBottom: "0.4rem",
-          }}
-        >
-          {brief.title}
-        </h3>
-        <p style={{ fontSize: "0.85rem", lineHeight: 1.6, color: "var(--muted-foreground)" }}>
-          {brief.body}
-        </p>
-        <SourceTags labels={sourceNames(brief)} />
-      </div>
+      <h3
+        style={{
+          fontSize: "1.05rem",
+          fontFamily: "'Georgia', serif",
+          fontWeight: 600,
+          lineHeight: 1.3,
+          color: "var(--ink)",
+          marginBottom: "0.4rem",
+        }}
+      >
+        {brief.title}
+      </h3>
+      <p style={{ fontSize: "0.85rem", lineHeight: 1.6, color: "var(--muted-foreground)" }}>
+        {brief.body}
+      </p>
+      <Sources brief={brief} />
     </div>
   );
 }

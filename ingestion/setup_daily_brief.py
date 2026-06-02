@@ -21,6 +21,8 @@ Required database table (run in Supabase SQL Editor if not exists):
       image_prompt TEXT,
       source_article_ids JSONB DEFAULT '[]',
       source_titles JSONB DEFAULT '[]',
+      source_names JSONB DEFAULT '[]',
+      source_urls JSONB DEFAULT '[]',
       created_at TIMESTAMPTZ DEFAULT NOW(),
       UNIQUE(brief_date, rank)
     );

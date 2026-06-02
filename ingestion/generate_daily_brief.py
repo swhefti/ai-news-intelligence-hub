@@ -357,6 +357,8 @@ def generate_daily_brief(hours=24, dry_run=False, target_date=None):
         brief = generate_brief_text(anthropic, cluster)
         source_article_ids = [a["id"] for a in cluster["articles"]]
         source_titles = [a["title"] for a in cluster["articles"]]
+        source_names = [a.get("source_name") for a in cluster["articles"]]
+        source_urls = [a.get("url") for a in cluster["articles"]]
 
         if dry_run:
             print(f"\n--- RANK {rank} ---")
@@ -380,6 +382,8 @@ def generate_daily_brief(hours=24, dry_run=False, target_date=None):
             "image_prompt": brief["image_prompt"],
             "source_article_ids": source_article_ids,
             "source_titles": source_titles,
+            "source_names": source_names,
+            "source_urls": source_urls,
         }
         supabase.table("daily_briefs").upsert(row, on_conflict="brief_date,rank").execute()
         logger.info("Saved rank %d brief (image_url=%s)", rank, "yes" if image_url else "none")
