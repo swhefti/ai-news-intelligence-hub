@@ -29,35 +29,24 @@ export async function GET(request: NextRequest) {
     const supabase = getSupabase();
     const { searchParams } = new URL(request.url);
 
-    // Resolve which date to serve: the explicitly requested ?date=, or — when
-    // none is given (the homepage) — the most recent brief available. This way
-    // the homepage shows the latest edition (e.g. yesterday's) until today's
-    // has been generated, instead of rendering blank.
-    let date = searchParams.get("date");
-    if (!date) {
-      const { data: latest, error: latestError } = await supabase
-        .from("daily_briefs")
-        .select("brief_date")
+    // With an explicit ?date= return that single edition; without one (the
+    // homepage) return recent editions across days, newest first. The client
+    // groups them by date and stacks older editions below the current one — and
+    // because the latest available edition is always included, the homepage
+    // never renders blank before today's brief has been generated.
+    const date = searchParams.get("date");
+
+    let query = supabase.from("daily_briefs").select("*");
+    if (date) {
+      query = query.eq("brief_date", date).order("rank", { ascending: true });
+    } else {
+      query = query
         .order("brief_date", { ascending: false })
-        .limit(1);
-
-      if (latestError) {
-        console.error("Daily brief latest-date error:", latestError);
-        if (latestError.message?.includes("does not exist")) {
-          return NextResponse.json([]);
-        }
-        return NextResponse.json({ error: latestError.message }, { status: 500 });
-      }
-
-      date = latest?.[0]?.brief_date ?? null;
-      if (!date) return NextResponse.json([]);
+        .order("rank", { ascending: true })
+        .limit(30);
     }
 
-    const { data: briefs, error } = await supabase
-      .from("daily_briefs")
-      .select("*")
-      .eq("brief_date", date)
-      .order("rank", { ascending: true });
+    const { data: briefs, error } = await query;
 
     if (error) {
       console.error("Daily brief fetch error:", error);
