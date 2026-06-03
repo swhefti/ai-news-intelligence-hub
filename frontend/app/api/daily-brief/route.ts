@@ -28,8 +28,30 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = getSupabase();
     const { searchParams } = new URL(request.url);
-    const date =
-      searchParams.get("date") || new Date().toISOString().split("T")[0];
+
+    // Resolve which date to serve: the explicitly requested ?date=, or — when
+    // none is given (the homepage) — the most recent brief available. This way
+    // the homepage shows the latest edition (e.g. yesterday's) until today's
+    // has been generated, instead of rendering blank.
+    let date = searchParams.get("date");
+    if (!date) {
+      const { data: latest, error: latestError } = await supabase
+        .from("daily_briefs")
+        .select("brief_date")
+        .order("brief_date", { ascending: false })
+        .limit(1);
+
+      if (latestError) {
+        console.error("Daily brief latest-date error:", latestError);
+        if (latestError.message?.includes("does not exist")) {
+          return NextResponse.json([]);
+        }
+        return NextResponse.json({ error: latestError.message }, { status: 500 });
+      }
+
+      date = latest?.[0]?.brief_date ?? null;
+      if (!date) return NextResponse.json([]);
+    }
 
     const { data: briefs, error } = await supabase
       .from("daily_briefs")
