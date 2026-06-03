@@ -27,6 +27,9 @@ interface Brief {
 // Shared width of the Daily Brief content column (matches the homepage tiles).
 const CONTENT_MAX_WIDTH = "60rem";
 
+// Show at most the last 7 daily editions on the homepage.
+const MAX_EDITIONS = 7;
+
 function formatDate(dateString: string): string {
   const date = new Date(dateString + "T12:00:00");
   return date.toLocaleDateString("en-US", {
@@ -419,7 +422,7 @@ export default function DailyBrief() {
   // Empty (no briefs generated yet) — render nothing.
   if (briefs.length === 0) return null;
 
-  const editions = groupByDate(briefs);
+  const editions = groupByDate(briefs).slice(0, MAX_EDITIONS);
 
   return (
     <section style={{ maxWidth: CONTENT_MAX_WIDTH, width: "100%", marginTop: "3rem" }}>

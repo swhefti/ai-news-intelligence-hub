@@ -45,9 +45,9 @@ SIMILARITY_THRESHOLD = 0.8  # cosine similarity > 0.8  ==  distance < 0.2
 PRIORITY_WEIGHTS = {"high": 3, "medium": 2, "low": 1}
 
 # Only consider stories published within this many days (a front-page "brief"
-# should be current, not re-ingested old posts). Tighten to 1 for stricter
-# same-day freshness.
-DEFAULT_MAX_AGE_DAYS = 2
+# should be current, not re-ingested old posts). 1 keeps it to genuinely
+# same-day news; loosen to 2 if a day is too sparse to fill 3 stories.
+DEFAULT_MAX_AGE_DAYS = 1
 
 # Recency weighting: among in-window stories, fresher ones rank higher. The
 # bonus decays linearly from RECENCY_WEIGHT (just published) to 0 at the edge
