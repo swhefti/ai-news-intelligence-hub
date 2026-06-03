@@ -24,6 +24,9 @@ interface Brief {
 /* Helpers                                                             */
 /* ------------------------------------------------------------------ */
 
+// Shared width of the Daily Brief content column (matches the homepage tiles).
+const CONTENT_MAX_WIDTH = "60rem";
+
 function formatDate(dateString: string): string {
   const date = new Date(dateString + "T12:00:00");
   return date.toLocaleDateString("en-US", {
@@ -31,6 +34,10 @@ function formatDate(dateString: string): string {
     month: "long",
     day: "numeric",
   });
+}
+
+function isTodayUTC(dateString: string): boolean {
+  return dateString === new Date().toISOString().split("T")[0];
 }
 
 /* ------------------------------------------------------------------ */
@@ -185,10 +192,10 @@ function MainStory({ brief }: { brief: Brief }) {
         <img
           src={brief.image_url}
           alt={brief.title}
-          width={300}
-          height={300}
+          width={340}
+          height={340}
           style={{
-            width: "300px",
+            width: "340px",
             maxWidth: "100%",
             aspectRatio: "1 / 1",
             objectFit: "cover",
@@ -211,13 +218,13 @@ function SubStory({ brief }: { brief: Brief }) {
         <img
           src={brief.image_url}
           alt={brief.title}
-          width={120}
-          height={120}
+          width={160}
+          height={160}
           style={{
             float: "left",
-            width: "120px",
-            height: "120px",
-            marginRight: "1rem",
+            width: "160px",
+            height: "160px",
+            marginRight: "1.25rem",
             marginBottom: "0.5rem",
             objectFit: "cover",
             borderRadius: "8px",
@@ -263,12 +270,12 @@ function Skeleton() {
           <div style={{ ...shimmer, height: "0.9rem", width: "100%", marginBottom: "0.4rem" }} />
           <div style={{ ...shimmer, height: "0.9rem", width: "90%" }} />
         </div>
-        <div style={{ ...shimmer, width: "300px", maxWidth: "100%", aspectRatio: "1 / 1" }} />
+        <div style={{ ...shimmer, width: "340px", maxWidth: "100%", aspectRatio: "1 / 1" }} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {[0, 1].map((i) => (
           <div key={i} className="bp-card" style={{ padding: "1.25rem", display: "flex", gap: "1rem" }}>
-            <div style={{ ...shimmer, width: "120px", height: "120px", flexShrink: 0 }} />
+            <div style={{ ...shimmer, width: "160px", height: "160px", flexShrink: 0 }} />
             <div style={{ flex: 1 }}>
               <div style={{ ...shimmer, height: "1.1rem", width: "85%", marginBottom: "0.5rem" }} />
               <div style={{ ...shimmer, height: "0.8rem", width: "100%", marginBottom: "0.3rem" }} />
@@ -285,7 +292,7 @@ function Skeleton() {
 /* Section header                                                      */
 /* ------------------------------------------------------------------ */
 
-function Header({ date }: { date?: string }) {
+function SectionLabel() {
   return (
     <h2
       className="mono-label"
@@ -295,12 +302,78 @@ function Header({ date }: { date?: string }) {
         textTransform: "uppercase",
         letterSpacing: "0.08em",
         color: "var(--muted-foreground)",
-        marginBottom: "1.25rem",
+        marginBottom: "1.5rem",
       }}
     >
-      Daily Brief{date ? ` — ${formatDate(date)}` : ""}
+      Daily Brief
     </h2>
   );
+}
+
+/* ------------------------------------------------------------------ */
+/* Edition — one day's brief (main story + two sub-stories)            */
+/* ------------------------------------------------------------------ */
+
+function Edition({ items, isLatest }: { items: Brief[]; isLatest: boolean }) {
+  const main = items.find((b) => b.rank === 1) || items[0];
+  const subs = items.filter((b) => b.id !== main.id).slice(0, 2);
+
+  return (
+    <div
+      style={{
+        marginTop: isLatest ? 0 : "2.5rem",
+        paddingTop: isLatest ? 0 : "2rem",
+        borderTop: isLatest ? "none" : "1px solid var(--border)",
+      }}
+    >
+      {/* Edition date */}
+      <p
+        style={{
+          fontFamily: "'Georgia', serif",
+          fontStyle: "italic",
+          fontSize: "1rem",
+          color: "var(--ink)",
+          marginBottom: "1rem",
+        }}
+      >
+        {formatDate(main.brief_date)}
+        {isLatest && isTodayUTC(main.brief_date) && (
+          <span
+            className="mono-label"
+            style={{ fontSize: "0.65rem", marginLeft: "0.5rem", color: "var(--copper)" }}
+          >
+            Today
+          </span>
+        )}
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <MainStory brief={main} />
+        {subs.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {subs.map((b) => (
+              <SubStory key={b.id} brief={b} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** Group briefs into editions by date (newest first). */
+function groupByDate(briefs: Brief[]): { date: string; items: Brief[] }[] {
+  const editions: { date: string; items: Brief[] }[] = [];
+  for (const b of briefs) {
+    let edition = editions.find((e) => e.date === b.brief_date);
+    if (!edition) {
+      edition = { date: b.brief_date, items: [] };
+      editions.push(edition);
+    }
+    edition.items.push(b);
+  }
+  editions.sort((a, b) => (a.date < b.date ? 1 : -1)); // newest first
+  return editions;
 }
 
 /* ------------------------------------------------------------------ */
@@ -324,8 +397,8 @@ export default function DailyBrief() {
   // Error — stay subtle, never break the page.
   if (error) {
     return (
-      <section style={{ maxWidth: "48rem", width: "100%", marginTop: "3rem" }}>
-        <Header />
+      <section style={{ maxWidth: CONTENT_MAX_WIDTH, width: "100%", marginTop: "3rem" }}>
+        <SectionLabel />
         <p style={{ fontSize: "0.85rem", color: "var(--muted-foreground)" }}>
           The daily brief is unavailable right now.
         </p>
@@ -336,32 +409,24 @@ export default function DailyBrief() {
   // Loading.
   if (briefs === null) {
     return (
-      <section style={{ maxWidth: "48rem", width: "100%", marginTop: "3rem" }}>
-        <Header />
+      <section style={{ maxWidth: CONTENT_MAX_WIDTH, width: "100%", marginTop: "3rem" }}>
+        <SectionLabel />
         <Skeleton />
       </section>
     );
   }
 
-  // Empty (no brief generated yet for today) — render nothing.
+  // Empty (no briefs generated yet) — render nothing.
   if (briefs.length === 0) return null;
 
-  const main = briefs.find((b) => b.rank === 1) || briefs[0];
-  const subs = briefs.filter((b) => b.id !== main.id).slice(0, 2);
+  const editions = groupByDate(briefs);
 
   return (
-    <section style={{ maxWidth: "48rem", width: "100%", marginTop: "3rem" }}>
-      <Header date={main.brief_date} />
-      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        <MainStory brief={main} />
-        {subs.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {subs.map((b) => (
-              <SubStory key={b.id} brief={b} />
-            ))}
-          </div>
-        )}
-      </div>
+    <section style={{ maxWidth: CONTENT_MAX_WIDTH, width: "100%", marginTop: "3rem" }}>
+      <SectionLabel />
+      {editions.map((edition, idx) => (
+        <Edition key={edition.date} items={edition.items} isLatest={idx === 0} />
+      ))}
     </section>
   );
 }

@@ -169,7 +169,7 @@ export default function HomePage() {
         <DailyBrief />
 
         {/* Feature cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6" style={{ marginTop: "3rem", maxWidth: "48rem", width: "100%" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6" style={{ marginTop: "3rem", maxWidth: "60rem", width: "100%" }}>
           <FeatureCard
             href="/explore"
             icon={<CompassIcon />}
