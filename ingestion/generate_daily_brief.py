@@ -39,7 +39,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 logger = logging.getLogger(__name__)
 
 BUCKET_NAME = "brief-images"
-CLAUDE_MODEL = "claude-sonnet-4-5"
+CLAUDE_MODEL = "claude-sonnet-5"
 IMAGE_MODEL = "gpt-image-1-mini"
 SIMILARITY_THRESHOLD = 0.8  # cosine similarity > 0.8  ==  distance < 0.2
 PRIORITY_WEIGHTS = {"high": 3, "medium": 2, "low": 1}
