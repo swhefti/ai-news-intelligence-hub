@@ -291,6 +291,7 @@ Write a brief for this story and return ONLY a JSON object (no prose, no code fe
     response = anthropic.messages.create(
         model=CLAUDE_MODEL,
         max_tokens=600,
+      thinking={"type": "disabled"},
         messages=[{"role": "user", "content": prompt}],
     )
     text = response.content[0].text
