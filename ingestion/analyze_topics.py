@@ -131,6 +131,7 @@ Articles:
     message = client.messages.create(
         model="claude-sonnet-5",
         max_tokens=2048,
+        thinking={"type": "disabled"},
         messages=[{"role": "user", "content": prompt}],
     )
 
